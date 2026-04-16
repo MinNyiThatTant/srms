@@ -68,7 +68,7 @@ $tab = $_GET['tab'] ?? 'orders'; // Default tab
             <div class="table-responsive">
                 <table class="table table-hover table-v mb-0">
                     <thead class="table-light"><tr><th>Table</th><th>Items</th><th>Time</th><th>Action</th></tr></thead>
-                    <tbody>
+                    <tbody id="live-order-body">
                         <?php 
                         $res = $conn->query("SELECT * FROM orders WHERE status='pending' ORDER BY id DESC");
                         while($o = $res->fetch_assoc()): ?>
@@ -192,6 +192,50 @@ $tab = $_GET['tab'] ?? 'orders'; // Default tab
     function setReady(id) {
         fetch(`api/update_status.php?id=${id}&status=ready`).then(() => location.reload());
     }
+
+    // အော်ဒါတွေကို API ကနေ ဆွဲထုတ်ပြီး Table ထဲ ထည့်မယ့် function
+    async function fetchLiveOrders() {
+        try {
+            const res = await fetch('api/get_live_orders.php');
+            const orders = await res.json();
+            
+            let html = "";
+            if(orders.length === 0) {
+                html = "<tr><td colspan='4' class='text-center text-muted'>အော်ဒါအသစ် မရှိသေးပါ...</td></tr>";
+            } else {
+                orders.forEach(o => {
+                    html += `
+                    <tr>
+                        <td><span class="badge bg-primary">Table ${o.table_no}</span></td>
+                        <td>${o.item_details}</td>
+                        <td>${o.time_formatted}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="setReady(${o.id})">Ready</button>
+                        </td>
+                    </tr>`;
+                });
+            }
+            
+            // Table content ကို refresh မလုပ်ဘဲ update လုပ်မယ်
+            document.getElementById('live-order-body').innerHTML = html;
+        } catch (err) {
+            console.error("Error fetching orders:", err);
+        }
+    }
+
+    // Ready ခလုတ်နှိပ်ရင် အလုပ်လုပ်မယ့် function
+    async function setReady(id) {
+        if(confirm('အော်ဒါ ပြင်ဆင်ပြီးပြီလား?')) {
+            await fetch(`api/update_status.php?id=${id}&status=ready`);
+            fetchLiveOrders(); // Status ပြောင်းပြီးတာနဲ့ ချက်ချင်း list ကို update လုပ်မယ်
+        }
+    }
+
+    // Page စဖွင့်တာနဲ့ အော်ဒါတွေကို စဆွဲမယ်
+    fetchLiveOrders();
+
+    // ၃ စက္ကန့်တစ်ခါ အော်ဒါအသစ် ရှိမရှိ အလိုအလျောက် စစ်နေမယ် (Live ဖြစ်အောင်)
+    setInterval(fetchLiveOrders, 3000);
 </script>
 </body>
 </html>
