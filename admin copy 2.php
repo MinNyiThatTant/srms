@@ -2,15 +2,14 @@
 session_start();
 include 'config/db.php';
 
-// Login ဝင်မထားလျှင် login.php သို့ ပြန်ပို့မည်
 if (!isset($_SESSION['admin_logged'])) {
     header("Location: login.php");
     exit;
 }
 
-// --- CRUD & LOGIC ---
+// --- CRUD LOGIC ---
+// --- Admin.php ရဲ့ အပေါ်ဆုံး PHP အပိုင်းမှာ ဒါလေး ထည့်ပါ ---
 
-// Edit အတွက် အချက်အလက်ယူခြင်း
 $editData = null;
 if (isset($_GET['edit_menu'])) {
     $eid = (int)$_GET['edit_menu'];
@@ -18,7 +17,7 @@ if (isset($_GET['edit_menu'])) {
     $editData = $res->fetch_assoc();
 }
 
-// Menu Update လုပ်ခြင်း
+// Update လုပ်တဲ့ Logic
 if (isset($_POST['update_menu'])) {
     $id = (int)$_POST['menu_id'];
     $name = $conn->real_escape_string($_POST['name']);
@@ -26,9 +25,9 @@ if (isset($_POST['update_menu'])) {
     $main_cat = $conn->real_escape_string($_POST['main_cat']);
     $sub_cat = $conn->real_escape_string($_POST['sub_cat']);
 
-    if (!empty($_FILES['image']['name'])) {
+    // ပုံအသစ်တင်ရင်
+    if ($_FILES['image']['name']) {
         $img = time() . '_' . $_FILES['image']['name'];
-        if (!is_dir('uploads')) mkdir('uploads');
         move_uploaded_file($_FILES['image']['tmp_name'], "uploads/" . $img);
         $conn->query("UPDATE menu SET name='$name', price=$price, main_category='$main_cat', category='$sub_cat', image='$img' WHERE id=$id");
     } else {
@@ -38,13 +37,12 @@ if (isset($_POST['update_menu'])) {
     exit;
 }
 
-// Main Category အသစ်ထည့်ခြင်း
+
 if (isset($_POST['add_main_category'])) {
     $nm = $conn->real_escape_string($_POST['new_main_cat']);
     $conn->query("INSERT INTO main_categories (name) VALUES ('$nm')");
 }
 
-// Main Category ဖျက်ခြင်း
 if (isset($_GET['del_main'])) {
     $did = (int)$_GET['del_main'];
     $conn->query("DELETE FROM main_categories WHERE id=$did");
@@ -52,14 +50,12 @@ if (isset($_GET['del_main'])) {
     exit;
 }
 
-// Sub Category အသစ်ထည့်ခြင်း
 if (isset($_POST['add_category'])) {
     $m = $conn->real_escape_string($_POST['main_cat']);
     $s = $conn->real_escape_string($_POST['sub_cat_name']);
     $conn->query("INSERT INTO categories (main_category, sub_category_name) VALUES ('$m', '$s')");
 }
 
-// Sub Category ဖျက်ခြင်း
 if (isset($_GET['del_cat'])) {
     $did = (int)$_GET['del_cat'];
     $conn->query("DELETE FROM categories WHERE id=$did");
@@ -67,7 +63,6 @@ if (isset($_GET['del_cat'])) {
     exit;
 }
 
-// ဟင်းပွဲအသစ်ထည့်ခြင်း
 if (isset($_POST['add_item'])) {
     $n = $conn->real_escape_string($_POST['name']);
     $p = (int)$_POST['price'];
@@ -82,7 +77,6 @@ if (isset($_POST['add_item'])) {
     $conn->query("INSERT INTO menu (name, price, image, category, main_category) VALUES ('$n', $p, '$img', '$cat', '$main_cat')");
 }
 
-// ဟင်းပွဲဖျက်ခြင်း
 if (isset($_GET['delete_id'])) {
     $id = (int)$_GET['delete_id'];
     $conn->query("DELETE FROM menu WHERE id=$id");
@@ -94,31 +88,50 @@ $tab = $_GET['tab'] ?? 'orders';
 ?>
 <!DOCTYPE html>
 <html lang="my">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
-        .nav-tabs .nav-link { border: none; color: #555; padding: 12px 20px; font-weight: 600; }
-        .nav-tabs .nav-link.active { background: #0d6efd !important; color: white !important; border-radius: 10px; }
-        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .table img { object-fit: cover; }
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #555;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: #0d6efd !important;
+            color: white !important;
+            border-radius: 10px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
-<body>
 
-    <nav class="navbar navbar-dark bg-dark mb-4 shadow-sm">
+<body>
+    <nav class="navbar navbar-dark bg-dark mb-4">
         <div class="container-fluid px-4">
-            <span class="navbar-brand fw-bold">🚀 Smart ကေတုအလင်္ကာ Restaurant</span>
+            <span class="navbar-brand fw-bold">🚀 Smart Restaurant Admin</span>
             <a href="logout.php" class="btn btn-danger btn-sm">Logout</a>
         </div>
     </nav>
 
     <div class="container-fluid px-4">
         <ul class="nav nav-tabs mb-4 border-0 gap-2">
-            <li class="nav-item"><a class="nav-link <?= $tab == 'orders' ? 'active' : '' ?>" href="?tab=orders"> Order အသစ်များ</a></li>
+            <li class="nav-item"><a class="nav-link <?= $tab == 'orders' ? 'active' : '' ?>" href="?tab=orders">အော်ဒါအသစ်များ</a></li>
             <li class="nav-item"><a class="nav-link <?= $tab == 'categories' ? 'active' : '' ?>" href="?tab=categories">Category စီမံရန်</a></li>
             <li class="nav-item"><a class="nav-link <?= $tab == 'menu' ? 'active' : '' ?>" href="?tab=menu">ဟင်းပွဲများ</a></li>
             <li class="nav-item"><a class="nav-link <?= $tab == 'history' ? 'active' : '' ?>" href="?tab=history">ရောင်းအားမှတ်တမ်း</a></li>
@@ -151,7 +164,7 @@ $tab = $_GET['tab'] ?? 'orders';
                             <input type="text" name="new_main_cat" class="form-control" placeholder="ဥပမာ- အစားအသောက်" required>
                             <button name="add_main_category" class="btn btn-primary">ထည့်မည်</button>
                         </form>
-                        <ul class="list-group shadow-sm">
+                        <ul class="list-group">
                             <?php $mc = $conn->query("SELECT * FROM main_categories");
                             while ($r = $mc->fetch_assoc()): ?>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -176,12 +189,12 @@ $tab = $_GET['tab'] ?? 'orders';
                             </div>
                         </form>
                         <hr>
-                        <ul class="list-group shadow-sm">
+                        <ul class="list-group">
                             <?php $sc = $conn->query("SELECT * FROM categories");
                             while ($r = $sc->fetch_assoc()): ?>
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span><?= $r['sub_category_name'] ?> <small class="text-muted">(<?= $r['main_category'] ?>)</small></span>
-                                    <a href="?tab=categories&del_cat=<?= $r['id'] ?>" class="text-danger fw-bold" style="text-decoration:none;">&times;</a>
+                                    <a href="?tab=categories&del_cat=<?= $r['id'] ?>" class="text-danger">&times;</a>
                                 </li>
                             <?php endwhile; ?>
                         </ul>
@@ -189,43 +202,47 @@ $tab = $_GET['tab'] ?? 'orders';
                 </div>
             </div>
 
+
+
+
         <?php elseif ($tab == 'menu'): ?>
+
             <?php if ($editData): ?>
-                <div class="card p-4 mb-4 border-warning" style="background: #2d3748; color: white;">
-                    <h6 class="text-warning fw-bold mb-3">📝 Edit Menu Item</h6>
-                    <form method="POST" enctype="multipart/form-data" class="row g-3">
+                <div class="card p-3 mb-4 border-warning shadow-sm" style="background: #2d3748; color: white;">
+                    <h6 class="text-warning fw-bold">📝 Edit Menu Item</h6>
+                    <form method="POST" enctype="multipart/form-data" class="row g-2">
                         <input type="hidden" name="menu_id" value="<?= $editData['id'] ?>">
                         <div class="col-md-3">
-                            <label class="small text-white-50">အမည်</label>
-                            <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($editData['name']) ?>" required>
+                            <input type="text" name="name" class="form-control form-control-sm" value="<?= htmlspecialchars($editData['name']) ?>" required>
                         </div>
                         <div class="col-md-2">
-                            <label class="small text-white-50">ဈေးနှုန်း</label>
-                            <input type="number" name="price" class="form-control" value="<?= $editData['price'] ?>" required>
+                            <input type="number" name="price" class="form-control form-control-sm" value="<?= $editData['price'] ?>" required>
                         </div>
                         <div class="col-md-2">
-                            <label class="small text-white-50">Main Category</label>
-                            <select name="main_cat" class="form-select" id="mainCatSelect" onchange="updateSubCategories()" required>
+                            <select name="main_cat" class="form-select form-control-sm" id="mainCatSelect" onchange="updateSubCategories()" required>
                                 <?php
                                 $mcats = $conn->query("SELECT * FROM main_categories");
                                 while ($mc = $mcats->fetch_assoc()):
                                 ?>
-                                    <option value="<?= $mc['name'] ?>" <?= ($mc['name'] == $editData['main_category']) ? 'selected' : '' ?>><?= $mc['name'] ?></option>
+                                    <option value="<?= $mc['name'] ?>" <?= ($mc['name'] == $editData['main_category']) ? 'selected' : '' ?>>
+                                        <?= $mc['name'] ?>
+                                    </option>
                                 <?php endwhile; ?>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="small text-white-50">Sub Category</label>
-                            <select name="sub_cat" class="form-select" id="subCatSelect" required></select>
+                            <select name="sub_cat" class="form-select form-control-sm" id="subCatSelect" required>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="small text-white-50">ပုံအသစ် (Optional)</label>
-                            <input type="file" name="image" class="form-control">
+                            <input type="file" name="image" class="form-control form-control-sm">
                         </div>
-                        <div class="col-md-1 d-flex align-items-end">
-                            <button type="submit" name="update_menu" class="btn btn-success w-100">Update</button>
+                        <div class="col-md-1">
+                            <button type="submit" name="update_menu" class="btn btn-sm btn-success w-100">Save</button>
                         </div>
-                        <div class="col-12"><a href="admin.php?tab=menu" class="text-white-50 small">Cancel Edit</a></div>
+                        <div class="col-12 mt-1">
+                            <a href="admin.php?tab=menu" class="btn btn-sm btn-link text-white p-0">Cancel</a>
+                        </div>
                     </form>
                 </div>
             <?php endif; ?>
@@ -235,7 +252,7 @@ $tab = $_GET['tab'] ?? 'orders';
                     <div class="card p-3">
                         <h6 class="fw-bold">ဟင်းပွဲအသစ်ထည့်ရန်</h6>
                         <form method="POST" enctype="multipart/form-data">
-                            <label class="small fw-bold mt-2">Main Category</label>
+                            <label class="small fw-bold">Main Category</label>
                             <select name="main_category" class="form-control mb-2" id="mSel" onchange="updateSub()">
                                 <?php $mc = $conn->query("SELECT * FROM main_categories");
                                 while ($r = $mc->fetch_assoc()) echo "<option value='{$r['name']}'>{$r['name']}</option>"; ?>
@@ -269,14 +286,10 @@ $tab = $_GET['tab'] ?? 'orders';
                                     while ($row = $items->fetch_assoc()): ?>
                                         <tr>
                                             <td><img src="uploads/<?= $row['image'] ?>" width="40" height="40" class="rounded me-2"><?= $row['name'] ?></td>
-                                            <td><small class="badge bg-light text-dark"><?= $row['main_category'] ?> / <?= $row['category'] ?></small></td>
-                                            <td><?= number_format($row['price']) ?> K</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href="admin.php?tab=menu&edit_menu=<?= $row['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                                    <a href="?tab=menu&delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('ဖျက်မလား?')">Del</a>
-                                                </div>
-                                            </td>
+                                            <td><small><?= $row['main_category'] ?> / <?= $row['category'] ?></small></td>
+                                            <td><?= number_format($row['price']) ?></td>
+                                            <td><a href="admin.php?tab=menu&edit_menu=<?= $row['id'] ?>" class="btn btn-sm btn-warning">Edit</a></td>
+                                            <td><a href="?tab=menu&delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('ဖျက်မလား?')">Del</a></td>
                                         </tr>
                                     <?php endwhile; ?>
                                 </tbody>
@@ -304,7 +317,7 @@ $tab = $_GET['tab'] ?? 'orders';
                         </thead>
                         <tbody>
                             <?php
-                            $hist = $conn->query("SELECT * FROM orders WHERE status IN ('ready','delivered') ORDER BY id DESC LIMIT 100");
+                            $hist = $conn->query("SELECT * FROM orders WHERE status IN ('ready','delivered') ORDER BY id DESC LIMIT 50");
                             $grand_total = 0;
                             while ($row = $hist->fetch_assoc()):
                                 $grand_total += $row['total_price'];
@@ -328,7 +341,7 @@ $tab = $_GET['tab'] ?? 'orders';
     </div>
 
     <script>
-        // Live Orders fetching
+        // LIVE ORDERS FETCHING
         async function fetchLiveOrders() {
             if ("<?= $tab ?>" !== 'orders') return;
             try {
@@ -351,7 +364,9 @@ $tab = $_GET['tab'] ?? 'orders';
                     });
                 }
                 document.getElementById('live-order-body').innerHTML = html;
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         async function setReady(id) {
@@ -359,13 +374,13 @@ $tab = $_GET['tab'] ?? 'orders';
             fetchLiveOrders();
         }
 
-        // Sub-category grouping data
+        // SUB CATEGORY AUTO FILTER FOR MENU ADDING
         const catData = <?php
-            $all = $conn->query("SELECT * FROM categories");
-            $data = [];
-            while ($r = $all->fetch_assoc()) $data[$r['main_category']][] = $r['sub_category_name'];
-            echo json_encode($data);
-        ?>;
+                        $all = $conn->query("SELECT * FROM categories");
+                        $data = [];
+                        while ($r = $all->fetch_assoc()) $data[$r['main_category']][] = $r['sub_category_name'];
+                        echo json_encode($data);
+                        ?>;
 
         function updateSub() {
             const m = document.getElementById('mSel').value;
@@ -380,16 +395,31 @@ $tab = $_GET['tab'] ?? 'orders';
             }
         }
 
+        setInterval(fetchLiveOrders, 5000);
+        window.onload = () => {
+            fetchLiveOrders();
+            if (document.getElementById('mSel')) updateSub();
+        };
+
+
+        // admin.php ရဲ့ script အပိုင်းထဲမှာ ဒါလေးရှိနေဖို့ လိုပါတယ်
         function updateSubCategories() {
-            const mainCatSelect = document.getElementById('mainCatSelect');
-            if(!mainCatSelect) return;
-            const mainCat = mainCatSelect.value;
+            const mainCat = document.getElementById('mainCatSelect').value;
             const subCatSelect = document.getElementById('subCatSelect');
             const selectedSub = "<?= $editData['category'] ?? '' ?>";
 
+            const allCategories = <?php
+                                    $all = $conn->query("SELECT * FROM categories");
+                                    $catData = [];
+                                    while ($r = $all->fetch_assoc()) {
+                                        $catData[$r['main_category']][] = $r['sub_category_name'];
+                                    }
+                                    echo json_encode($catData);
+                                    ?>;
+
             subCatSelect.innerHTML = '';
-            if (catData[mainCat]) {
-                catData[mainCat].forEach(sub => {
+            if (allCategories[mainCat]) {
+                allCategories[mainCat].forEach(sub => {
                     let opt = document.createElement('option');
                     opt.value = sub;
                     opt.innerText = sub;
@@ -399,13 +429,11 @@ $tab = $_GET['tab'] ?? 'orders';
             }
         }
 
-        // Initialize
-        setInterval(fetchLiveOrders, 5000);
-        window.onload = () => {
-            fetchLiveOrders();
-            if (document.getElementById('mSel')) updateSub();
-            if (document.getElementById('mainCatSelect')) updateSubCategories();
-        };
+        // Edit Mode ဖြစ်နေရင် ချက်ချင်း run ပေးဖို့
+        <?php if ($editData): ?>
+            document.addEventListener('DOMContentLoaded', updateSubCategories);
+        <?php endif; ?>
     </script>
 </body>
+
 </html>

@@ -1,18 +1,24 @@
 <?php
 include '../config/db.php';
-$id = $_GET['id'];
+
+if(!isset($_GET['id'])) exit;
+$id = (int)$_GET['id'];
 
 // Status နဲ့ မှာထားတဲ့ Item တွေကို အရေအတွက်အလိုက် Group ဖွဲ့ပြီး ဆွဲထုတ်မယ်
 $res = $conn->query("SELECT o.status, 
-                     GROUP_CONCAT(CONCAT(d.item_name, ' (', qty, ')') SEPARATOR '|') as item_details
+                     (SELECT GROUP_CONCAT(CONCAT(item_name, ' (x', qty, ')') SEPARATOR '|') 
+                      FROM (SELECT order_id, item_name, COUNT(*) as qty 
+                            FROM order_details 
+                            GROUP BY order_id, item_name) as d 
+                      WHERE d.order_id = o.id) as item_details
                      FROM orders o 
-                     JOIN (
-                        SELECT order_id, item_name, COUNT(*) as qty 
-                        FROM order_details 
-                        GROUP BY order_id, item_name
-                     ) d ON o.id = d.order_id 
-                     WHERE o.id = $id 
-                     GROUP BY o.id");
+                     WHERE o.id = $id");
 
-echo json_encode($res->fetch_assoc());
+$data = $res->fetch_assoc();
+header('Content-Type: application/json');
+if($data) {
+    echo json_encode($data);
+} else {
+    echo json_encode(['status' => 'not found']);
+}
 ?>

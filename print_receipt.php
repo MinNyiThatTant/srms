@@ -28,8 +28,8 @@ $items_res = $conn->query("SELECT item_name, price, COUNT(*) as qty, (price * CO
 </head>
 <body onload="window.print()">
     <div class="text-center">
-        <h3 style="margin:0;">SMART RESTAURANT</h3>
-        <p style="font-size: 12px;">ဗဟန်းမြို့နယ်၊ ရန်ကုန်မြို့။<br>Phone: 09-123456789</p>
+        <h3 style="margin:0;">SMART ကေတုအလင်္ကာ RESTAURANT</h3>
+        <p style="font-size: 12px;">ကေတုမတီမြို့သစ်။<br>Phone: 09-123456789</p>
     </div>
 
     <div class="line"></div>

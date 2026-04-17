@@ -1,24 +1,27 @@
 <?php
 include '../config/db.php';
 
-// Pending ဖြစ်နေတဲ့ အော်ဒါတွေကို အသေးစိတ် item list နဲ့တကွ ဆွဲထုတ်မယ်
-$res = $conn->query("SELECT o.id, o.table_no, o.created_at, 
-                     GROUP_CONCAT(CONCAT(d.item_name, ' (x', d.qty, ')') SEPARATOR '<br>') as item_details
-                     FROM orders o 
-                     JOIN (
-                        SELECT order_id, item_name, COUNT(*) as qty 
-                        FROM order_details 
-                        GROUP BY order_id, item_name
-                     ) d ON o.id = d.order_id 
-                     WHERE o.status = 'pending'
-                     GROUP BY o.id
-                     ORDER BY o.id DESC");
+$sql = "SELECT o.id, o.table_no, o.created_at, o.status,
+        (SELECT GROUP_CONCAT(CONCAT(item_name, ' (x', qty, ')') SEPARATOR '<br>') 
+         FROM (SELECT order_id, item_name, COUNT(*) as qty 
+               FROM order_details 
+               GROUP BY order_id, item_name) as d 
+         WHERE d.order_id = o.id) as item_details
+        FROM orders o 
+        WHERE o.status = 'pending' 
+        ORDER BY o.id DESC";
 
+$res = $conn->query($sql);
 $orders = [];
-while($row = $res->fetch_assoc()) {
-    $row['time_formatted'] = date('h:i A', strtotime($row['created_at']));
-    $orders[] = $row;
+
+if($res) {
+    while($row = $res->fetch_assoc()) {
+        $row['time_formatted'] = date('h:i A', strtotime($row['created_at']));
+        $row['item_details'] = $row['item_details'] ?: "No items";
+        $orders[] = $row;
+    }
 }
 
-echo json_encode($orders);
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode($orders, JSON_UNESCAPED_UNICODE);
 ?>

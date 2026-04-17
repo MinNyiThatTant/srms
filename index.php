@@ -1,5 +1,4 @@
 <?php
-// ၁။ Database ချိတ်ဆက်မှုကို ထိပ်ဆုံးမှာ ထည့်ပါ
 include 'config/db.php';
 ?>
 <!DOCTYPE html>
@@ -14,15 +13,8 @@ include 'config/db.php';
         body {
             background: #0f172a;
             color: white;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             padding-bottom: 100px;
-        }
-
-        .menu-card {
-            background: #16213e;
-            border: 1px solid #2e344e;
-            border-radius: 15px;
-            transition: 0.3s;
         }
 
         .menu-card:hover {
@@ -34,31 +26,26 @@ include 'config/db.php';
             background: #6366f1;
             color: white;
             border: none;
-            transition: 0.3s;
             width: 100%;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 8px;
         }
 
-        .btn-add:hover {
-            background: #4f46e5;
-        }
-
-        /* Floating Status Box */
-        .status-tracker {
+        /* Floating Status Tracker */
+        /* .status-tracker {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-            background: white;
-            color: #333;
+            top: 15px;
+            right: 15px;
+            width: 280px;
+            background: #1e293b;
+            border: 1px solid #6366f1;
             border-radius: 15px;
-            padding: 15px;
+            padding: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
+        } */
 
         .cart-bar {
             position: fixed;
@@ -67,287 +54,376 @@ include 'config/db.php';
             width: 100%;
             background: #10b981;
             color: white;
-            padding: 18px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
             z-index: 999;
+            border-radius: 20px 20px 0 0;
         }
 
-        /* Card ပုံစံကို ပိုလှအောင် ပြင်ခြင်း */
-        .menu-card {
-            background: #1e293b !important;
-            /* နည်းနည်း ပိုလင်းတဲ့ နက်ပြာရောင် */
-            border-radius: 20px !important;
+        .category-scroll::-webkit-scrollbar {
+            display: none;
         }
 
-        .menu-card img {
-            transition: transform 0.5s ease;
+        .nav-pills .nav-link {
+            color: #ccc;
+            border-radius: 10px;
+            margin: 0 2px;
         }
 
-        .menu-card:hover img {
-            transform: scale(1.1);
-            /* Hover လုပ်ရင် ပုံလေး နည်းနည်း ကြီးလာမယ် */
+        .nav-pills .nav-link.active {
+            background-color: #6366f1 !important;
+            color: white;
         }
 
-        /* Button ကို ဝိုင်းဝိုင်းလေး လုပ်မယ် */
-        .btn-add {
-            border-radius: 50px !important;
-            padding: 8px 15px;
-            font-weight: bold;
+        .btn-sub {
+            border-radius: 20px;
+            white-space: nowrap;
             font-size: 12px;
+            margin-right: 5px;
         }
-        /* အမျိုးအစား ခလုတ်တန်းအတွက် styling */
-.category-scroll::-webkit-scrollbar {
-    display: none; /* scrollbar ဖျောက်ထားမယ် */
-}
 
-.menu-card {
-    transition: 0.3s;
-}
+        /* Floating Status Toggle Button */
+        .status-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #6366f1;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            border: 2px solid white;
+        }
 
-/* ပုံကို card ထဲမှာ အပြည့်ပေါ်စေပြီး ဘေးတွေမပြတ်စေချင်ရင် object-fit: contain သုံးပါ */
-/* ဒါပေမယ့် ပုံစံတူညီအောင် cover က ပိုလှပါတယ် */
-.menu-card img {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
+        /* Status Tracker ကို ပြင်ဆင်ခြင်း */
+        .status-tracker {
+            position: fixed;
+            top: 80px;
+            /* Toggle button ရဲ့ အောက်နားလေးမှာ ပေါ်ဖို့ */
+            right: 20px;
+            width: 300px;
+            background: #1e293b;
+            border: 1px solid #6366f1;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            /* အစမှာ ဖျောက်ထားမယ် */
+        }
+
+        /* ဖုန်းနဲ့ကြည့်ရင် ပိုအဆင်ပြေအောင် */
+        @media (max-width: 576px) {
+            .status-tracker {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
+        }
+
+        /* ပုံကို အကွက်ထဲ အပြည့်ဖြစ်အောင် ညှိခြင်း */
+        .menu-img {
+            width: 100%;
+            height: 180px;
+            /* ပုံအမြင့်ကို ပုံသေသတ်မှတ် */
+            object-fit: cover;
+            /* ပုံမရှုံ့သွားဘဲ အကွက်ထဲ အပြည့်ဖြည့်မယ် */
+            border-bottom: 1px solid #2e344e;
+        }
+
+        /* Menu Card ပုံစံ */
+        .menu-card {
+            background: #1e293b;
+            border: 1px solid #2e344e;
+            border-radius: 20px;
+            transition: 0.3s;
+            overflow: hidden;
+            height: 100%;
+            /* Card အမြင့်တွေကို ညီအောင်ထားမယ် */
+        }
+
+        /* ဟင်းပွဲအမည် စာသားပုံစံ */
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 5px;
+            display: block;
+            /* သေချာပေါ်အောင် block ထားမယ် */
+        }
+
+        .item-price {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Add Button ပုံစံနှင့် Hover Effect */
+        .btn-add {
+            background: #6366f1;
+            color: white;
+            border: none;
+            transition: 0.3s;
+            width: 100%;
+            border-radius: 50px;
+            font-weight: bold;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        /* Hover ဖြစ်ရင် အရောင်သိပ်မပြောင်းဘဲ နည်းနည်းပဲ လင်းသွားအောင်လုပ်ခြင်း */
+        .btn-add:hover {
+            background: #4f46e5;
+            /* အရောင်ရင့်သွားမယ် */
+            color: #ffffff !important;
+            /* စာသားဖြူမြဲဖြူနေရမယ် */
+            transform: scale(1.02);
+            /* နည်းနည်းလေး ကြီးလာမယ် */
+        }
     </style>
 </head>
+
 <body>
-    <div id="status-tracker" class="status-tracker shadow-lg">
-        <h6 class="fw-bold border-bottom pb-2 mb-3">📋 My Orders Status</h6>
-        <div id="status-list"></div>
+
+    <div id="status-toggle" class="status-toggle-btn" onclick="toggleStatusBox()" style="display: none;">
+        <span id="order-count-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">0</span>
+        📋
     </div>
 
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-white">🍽️ Table: <span id="table-id" class="text-info">--</span></h4>
+    <div id="status-tracker" class="status-tracker">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-2">
+            <h6 class="small fw-bold mb-0 text-info">📋 မှာယူထားသော အခြေအနေ</h6>
+            <button class="btn-close btn-close-white" style="font-size: 10px;" onclick="toggleStatusBox()"></button>
+        </div>
+        <div id="status-list" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <div class="container py-3">
+        <div class="mb-3">
+            <h5 class="fw-bold">Table: <span id="table-id" class="text-info">--</span></h5>
         </div>
 
-        <div class="category-scroll d-flex gap-2 overflow-auto pb-3 mb-4">
-            <button class="btn btn-sm btn-outline-info active" onclick="filterMenu('all', event)">All</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('cool drink', event)">Cool Drink</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('hot drink', event)">Hot Drinks</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('traditional food', event)">Traditional</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('thai food', event)">Thai Food</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('lunch', event)">Lunch</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('dinner', event)">Dinner</button>
-            <button class="btn btn-sm btn-outline-info" onclick="filterMenu('dessert', event)">Dessert</button>
-        </div>
-
-        <div class="row g-3">
-    <?php 
-    if (isset($conn)) {
-        $res = $conn->query("SELECT * FROM menu");
-        while ($row = $res->fetch_assoc()): 
-            $img_path = "uploads/" . ($row['image'] ? $row['image'] : 'default.jpg');
-            
-            // ၁။ ဒီနေရာမှာ category ကို သန့်စင်လိုက်ပါတယ်
-            $clean_category = trim(strtolower($row['category']));
+        <ul class="nav nav-pills nav-justified mb-3 bg-dark p-1 shadow-sm" style="border-radius: 12px;" id="mainCatTabs">
+    <?php
+    $mcats = $conn->query("SELECT * FROM main_categories");
+    $c = 0;
+    while ($mc = $mcats->fetch_assoc()):
+        $name = $mc['name']; // Database ထဲက နာမည်အတိုင်း ယူပါ
     ?>
-        <div class="col-6 col-md-4 menu-item" data-category="<?= htmlspecialchars($clean_category) ?>">
-            <div class="card menu-card h-100 border-0 shadow-sm overflow-hidden">
-                <div class="image-container" style="width: 100%; height: 150px; background: #242f44;">
-                    <img src="<?= $img_path ?>" class="w-100 h-100" style="object-fit: cover;" alt="food">
-                </div>
+        <li class="nav-item">
+            <button class="nav-link <?= ($c == 0) ? 'active' : '' ?>"
+                onclick="filterMainCat('<?= $name ?>', this)">
+                <?= htmlspecialchars($mc['name']) ?>
+            </button>
+        </li>
+    <?php $c++; endwhile; ?>
+</ul>
 
-                <div class="p-3 text-center">
-                    <div class="fw-bold mb-1 text-white" style="font-size: 0.95rem;">
-                        <?= htmlspecialchars($row['name']) ?>
-                    </div>
-                    <div class="text-muted small mb-1" style="font-size: 10px;">(<?= $clean_category ?>)</div>
-                    
-                    <div class="text-info small mb-3 fw-bold">
-                        <?= number_format($row['price']) ?> MMK
-                    </div>
-                    <button class="btn btn-sm btn-add" 
-                            onclick="addToCart('<?= addslashes($row['name']) ?>', <?= $row['price'] ?>)">
-                        Add to Cart +
+        <!-- <div class="category-scroll d-flex overflow-auto pb-2 mb-3" id="subCatContainer"></div> -->
+
+        <div class="row g-3" id="menu-container">
+            <?php
+            $res = $conn->query("SELECT * FROM menu");
+            while ($row = $res->fetch_assoc()):
+                $img = "uploads/" . ($row['image'] ?: 'default.jpg');
+            ?>
+                <div class="col-6 col-md-4 col-lg-3 mb-4 menu-item-card" data-main-cat="<?= $row['main_category'] ?>">
+                    <div class="menu-card shadow-sm">
+                
+                <img src="uploads/<?= $row['image'] ?>" class="menu-img" alt="<?= htmlspecialchars($row['name']) ?>">
+
+                <div class="p-3">
+                    <strong class="item-name"><?= htmlspecialchars($row['name']) ?></strong>
+
+                    <div class="item-price"><?= number_format($row['price']) ?> MMK</div>
+
+                    <button class="btn-add" onclick="addToCart('<?= addslashes($row['name']) ?>', <?= $row['price'] ?>)">
+                        Add +
                     </button>
                 </div>
-            </div>
         </div>
-    <?php 
-        endwhile; 
-    } 
-    ?>
+    </div>
+<?php endwhile; ?>
 </div>
-    </div>
+</div>
 
-    <div class="cart-bar" onclick="placeOrder()">
-        🛒 Confirm Order (<span id="cart-count">0</span>) - <span id="cart-total">0</span> MMK
-    </div>
+<div class="cart-bar shadow" onclick="placeOrder()">
+    🛒 Confirm Order (<span id="cart-count">0</span>) - <span id="cart-total">0</span> K
+</div>
 
-    <script>
-    function filterMenu(category, event) {
-    // Button Active ပြောင်းခြင်း
-    const btns = document.querySelectorAll('.category-scroll .btn');
-    btns.forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+<script>
+    let cart = [];
+    // my_orders ကော myOrders ကော ငြိမှာစိုးလို့ တစ်ခုပဲ သေချာသုံးမယ်
+    let myOrderIDs = JSON.parse(localStorage.getItem('myOrders')) || [];
+    const tableNo = new URLSearchParams(window.location.search).get('table') || "A1";
+    document.getElementById('table-id').innerText = tableNo;
 
-    const items = document.querySelectorAll('.menu-item');
     
-    // ရွေးချယ်လိုက်တဲ့ category ကို သန့်စင်လိုက်မယ်
-    let filterCat = category.trim().toLowerCase();
 
-    items.forEach(item => {
-        // Item တစ်ခုချင်းစီရဲ့ category ကိုလည်း သန့်စင်ပြီးမှ တိုက်စစ်မယ်
-        let itemCat = item.getAttribute('data-category').trim().toLowerCase();
+    function addToCart(name, price) {
+        cart.push({
+            name,
+            price
+        });
+        document.getElementById('cart-count').innerText = cart.length;
+        document.getElementById('cart-total').innerText = cart.reduce((s, i) => s + i.price, 0).toLocaleString();
+    }
 
-        if (filterCat === 'all' || itemCat === filterCat) {
-            item.style.display = 'block';
+    async function placeOrder() {
+        if (cart.length === 0) return alert("ဟင်းပွဲအရင်ရွေးပါ");
+        const res = await fetch('api/place_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: tableNo,
+                items: cart
+            })
+        });
+        const result = await res.json();
+        if (result.success) {
+            myOrderIDs.push(result.order_id);
+            localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
+            alert("Order တင်ပြီးပါပြီ!");
+            cart = [];
+            location.reload();
+        }
+    }
+
+    function toggleStatusBox() {
+        const box = document.getElementById('status-tracker');
+        box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+    }
+
+    function startLiveTracking() {
+        if (myOrderIDs.length === 0) {
+            document.getElementById('status-toggle').style.display = 'none';
+            return;
+        }
+
+        // မှာထားတာရှိရင် ခလုတ်လေးကို ပြမယ်
+        document.getElementById('status-toggle').style.display = 'flex';
+        document.getElementById('order-count-badge').innerText = myOrderIDs.length;
+
+        setInterval(async () => {
+            let html = "";
+            let activeOrders = 0;
+
+            for (let id of myOrderIDs) {
+                try {
+                    const res = await fetch(`api/check_status.php?id=${id}`);
+                    const data = await res.json();
+
+                    if (!data || data.status === 'not found') continue;
+                    activeOrders++;
+
+                    let currentStatus = data.status.toLowerCase();
+                    let isPending = (currentStatus === 'pending');
+                    let isReady = (currentStatus === 'ready');
+
+                    html += `
+                    <div class="mb-3 p-2 border border-secondary rounded bg-dark shadow-sm">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <strong class="text-info" style="font-size: 12px;">Order #${id}</strong>
+                            <span class="badge ${isPending ? 'bg-warning text-dark' : 'bg-success'}" style="font-size: 10px;">
+                                ${isPending ? '👨‍🍳 Cooking' : '✅ Ready'}
+                            </span>
+                        </div>
+                        <div class="small text-light mb-2" style="font-size: 11px; opacity: 0.8;">
+                            ${data.item_details ? data.item_details.replace(/\|/g, ', ') : ''}
+                        </div>
+                        ${isPending ? `
+                            <button class="btn btn-danger btn-xs w-100 py-1" style="font-size: 10px;" onclick="cancelOrder(${id})">Cancel</button>
+                        ` : ''}
+                    </div>`;
+
+                    if (isReady) {
+                        // Ready ဖြစ်ပြီး ၁ မိနစ်ကြာရင် list ထဲက ဖြုတ်မယ်
+                        setTimeout(() => {
+                            myOrderIDs = myOrderIDs.filter(oid => oid != id);
+                            localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
+                        }, 60000);
+                    }
+                } catch (e) {}
+            }
+
+            document.getElementById('status-list').innerHTML = html;
+            document.getElementById('order-count-badge').innerText = activeOrders;
+
+            if (activeOrders === 0) {
+                document.getElementById('status-toggle').style.display = 'none';
+                document.getElementById('status-tracker').style.display = 'none';
+            }
+        }, 5000);
+    }
+
+    window.onload = () => {
+        const firstTab = document.querySelector('#mainCatTabs .nav-link.active');
+        if (firstTab) firstTab.click();
+        startLiveTracking();
+    };
+
+    async function cancelOrder(id) {
+        if (!confirm('ဒီအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?')) return;
+
+        try {
+            const res = await fetch('api/cancel_order.php', { // Path ကို သတိထားပါ
+                method: 'POST',
+                body: JSON.stringify({
+                    id: id
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                alert('Order cancelled successfully');
+                location.reload(); // Page ကို refresh လုပ်ပြီး list ထဲက ဖျက်မယ်
+            } else {
+                alert(data.message); // "ဟင်းပွဲပြင်ဆင်ပြီးသွားပြီဖြစ်၍..." ဆိုတဲ့စာပြလိမ့်မယ်
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error cancelling order');
+        }
+    }
+
+    function filterMainCat(mainCat, element) {
+    // ၁။ Tab အားလုံးရဲ့ Active class နဲ့ Style ကို အရင်ဖြုတ်မယ်
+    document.querySelectorAll('#mainCatTabs .nav-link').forEach(link => {
+        link.classList.remove('active');
+        link.style.background = 'transparent';
+    });
+
+    // ၂။ အခုနှိပ်လိုက်တဲ့ Tab ကို အရောင်ပြောင်းမယ်
+    element.classList.add('active');
+    element.style.background = '#6366f1';
+
+    // ၃။ Menu Item Card တွေအားလုံးကို ယူပြီး စစ်မယ်
+    const cards = document.querySelectorAll('.menu-item-card');
+
+    cards.forEach(card => {
+        const cardCat = card.getAttribute('data-main-cat');
+        
+        // Database က category နဲ့ Tab က name နဲ့ တူရင် ပြမယ်
+        if (mainCat === 'all' || cardCat === mainCat) {
+            card.style.display = 'block';
         } else {
-            item.style.display = 'none';
+            card.style.display = 'none';
         }
     });
 }
-
-    let cart = [];
-        // Refresh လုပ်ရင် data မပျောက်အောင် localStorage ကနေ အော်ဒါ ID တွေ ပြန်ယူမယ်
-        let myOrderIDs = JSON.parse(localStorage.getItem('my_orders')) || [];
-        
-        // URL ကနေ Table No ကို ယူမယ် (မရှိရင် A1 လို့ သတ်မှတ်မယ်)
-        const tableNo = new URLSearchParams(window.location.search).get('table') || "A1";
-        document.getElementById('table-id').innerText = tableNo;
-
-        // Page Load ဖြစ်တာနဲ့ Tracking ရှိရင် စစ်မယ်
-        window.onload = () => {
-            if (myOrderIDs.length > 0) {
-                document.getElementById('status-tracker').style.display = 'block';
-                startLiveTracking();
-            }
-        };
-
-        // Cart ထဲကို ပစ္စည်းထည့်တဲ့ Function
-        function addToCart(name, price) {
-            cart.push({ name, price });
-            updateCartUI();
-        }
-
-        // Cart Bar မှာ အရေအတွက်နဲ့ စုစုပေါင်းဈေးနှုန်းပြတဲ့ Function
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-            document.getElementById('cart-total').innerText = cart.reduce((s, i) => s + i.price, 0).toLocaleString();
-        }
-
-        // Order တင်တဲ့ Function
-        async function placeOrder() {
-            if (cart.length === 0) return alert("Menu အရင်ရွေးပါဦး Bro!");
-
-            try {
-                const res = await fetch('api/place_order.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ table: tableNo, items: cart })
-                });
-                const result = await res.json();
-
-                if (result.success) {
-                    alert("Order တင်ပြီးပါပြီ။ ခေတ္တစောင့်ဆိုင်းပေးပါ ခင်ဗျာ။");
-                    myOrderIDs.push(result.order_id);
-                    
-                    // Browser storage မှာ သိမ်းထားမယ်
-                    localStorage.setItem('my_orders', JSON.stringify(myOrderIDs));
-                    
-                    cart = []; // Cart ကို ပြန်ရှင်းမယ်
-                    updateCartUI();
-                    document.getElementById('status-tracker').style.display = 'block';
-                    startLiveTracking(); // Tracking ပြန်စမယ်
-                }
-            } catch (error) {
-                console.error("Order error:", error);
-                alert("အော်ဒါတင်လို့ မရဖြစ်နေပါတယ်။ Network စစ်ပေးပါဦး။");
-            }
-        }
-
-        // Order Status ကို Live လိုက်ကြည့်တဲ့ Function
-        function startLiveTracking() {
-            if (window.trackingInterval) clearInterval(window.trackingInterval);
-
-            window.trackingInterval = setInterval(async () => {
-                if (myOrderIDs.length === 0) {
-                    document.getElementById('status-tracker').style.display = 'none';
-                    localStorage.removeItem('my_orders');
-                    clearInterval(window.trackingInterval);
-                    return;
-                }
-
-                let html = "";
-                for (let i = 0; i < myOrderIDs.length; i++) {
-                    const id = myOrderIDs[i];
-                    try {
-                        const res = await fetch(`api/check_status.php?id=${id}`);
-                        const data = await res.json();
-                        if(!data) continue;
-
-                        let isReady = data.status === 'ready';
-                        let statusLabel = isReady ?
-                            `<span class="badge bg-success shadow-sm">✅ Ready</span>` :
-                            `<span class="badge bg-warning text-dark shadow-sm">⏳ Cooking...</span>`;
-
-                        let cancelButton = !isReady ?
-                            `<button class="btn btn-outline-danger btn-sm mt-2 w-100" style="font-size: 11px;" onclick="cancelOrder(${id})">❌ Cancel Order</button>` : "";
-
-                        // Item အသေးစိတ်တွေ ပြဖို့
-                        let itemsHtml = (data.item_details || "").split('|').map(item => {
-                            let parts = item.split(' (');
-                            return `<div class="d-flex justify-content-between align-items-center mb-1 small">
-                                        <span class="text-secondary">• ${parts[0]}</span>
-                                        <span class="badge bg-light text-dark border">x ${parts[1] ? parts[1].replace(')', '') : 1}</span>
-                                    </div>`;
-                        }).join('');
-
-                        html += `
-                        <div class="card border-0 shadow-sm mb-3" style="border-radius: 12px; overflow: hidden;" id="card-${id}">
-                            <div class="card-header bg-white d-flex justify-content-between align-items-center py-2" style="border-bottom: 1px dashed #ddd;">
-                                <span class="fw-bold text-primary small">Order #${id}</span>
-                                ${statusLabel}
-                            </div>
-                            <div class="card-body py-2 px-3" style="background: #fdfdfd; color: #333;">
-                                ${itemsHtml}
-                                ${cancelButton}
-                            </div>
-                        </div>`;
-
-                        // Ready ဖြစ်ပြီး ၁၅ စက္ကန့်ကြာရင် List ထဲက ဖြုတ်မယ်
-                        if (isReady) {
-                            setTimeout(() => {
-                                myOrderIDs = myOrderIDs.filter(item => item !== id);
-                                localStorage.setItem('my_orders', JSON.stringify(myOrderIDs));
-                            }, 15000); 
-                        }
-                    } catch (e) { console.error("Update error"); }
-                }
-                document.getElementById('status-list').innerHTML = html;
-            }, 3000); // ၃ စက္ကန့်တစ်ခါ Update စစ်မယ်
-        }
-
-        // Order ပြန်ဖျက်တဲ့ Function
-        async function cancelOrder(id) {
-            if (confirm("ဒီအော်ဒါကို ဖျက်မှာ သေချာပါသလား?")) {
-                try {
-                    const res = await fetch('api/cancel_order.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: id })
-                    });
-                    const result = await res.json();
-                    if (result.success) {
-                        myOrderIDs = myOrderIDs.filter(item => item !== id);
-                        localStorage.setItem('my_orders', JSON.stringify(myOrderIDs));
-                        startLiveTracking();
-                    } else {
-                        alert(result.message);
-                    }
-                } catch (error) {
-                    alert("Cancel လုပ်လို့ မရပါ။");
-                }
-            }
-        }
-    </script>
+</script>
 </body>
+
 </html>
