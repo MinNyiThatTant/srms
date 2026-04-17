@@ -22,3 +22,16 @@ CREATE TABLE order_details (
     item_name VARCHAR(255),
     price INT
 );
+
+
+ALTER TABLE menu ADD COLUMN image VARCHAR(255) DEFAULT 'default.jpg' AFTER price;
+
+ALTER TABLE menu ADD COLUMN category VARCHAR(100) DEFAULT 'traditional food';
+
+INSERT INTO menu (name, price, category, image) VALUES 
+('Nasi Goreng', 15000, 'traditional food', 'nasi_goreng.jpg'),
+('Mie Goreng', 12000, 'traditional food', 'mie_goreng.jpg'),
+('Sate Ayam', 20000, 'traditional food', 'sate_ayam.jpg'),
+('Es Teh Manis', 5000, 'beverages', 'es_teh_manis.jpg'),
+('Jus Jeruk', 8000, 'beverages', 'jus_jeruk.jpg');
+

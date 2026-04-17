@@ -1,0 +1,21 @@
+/* Card ပုံစံကို ပိုလှအောင် ပြင်ခြင်း */
+.menu-card {
+    background: #1e293b !important; /* နည်းနည်း ပိုလင်းတဲ့ နက်ပြာရောင် */
+    border-radius: 20px !important;
+}
+
+.menu-card img {
+    transition: transform 0.5s ease;
+}
+
+.menu-card:hover img {
+    transform: scale(1.1); /* Hover လုပ်ရင် ပုံလေး နည်းနည်း ကြီးလာမယ် */
+}
+
+/* Button ကို ဝိုင်းဝိုင်းလေး လုပ်မယ် */
+.btn-add {
+    border-radius: 50px !important;
+    padding: 8px 15px;
+    font-weight: bold;
+    font-size: 12px;
+}
