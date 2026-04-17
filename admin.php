@@ -171,7 +171,7 @@ $tab = $_GET['tab'] ?? 'orders';
                         <div class="card-header bg-dark text-white fw-bold">ဟင်းပွဲ အသစ်ထည့်/ပြင်ရန်</div>
                         <div class="card-body">
                             <?php
-                            $editData = ['id' => '', 'name' => '', 'price' => '', 'category' => 'coll drink'];
+                            $editData = ['id' => '', 'name' => '', 'price' => '', 'category' => 'cool drink'];
                             if (isset($_GET['edit_id'])) {
                                 $eid = $_GET['edit_id'];
                                 $editData = $conn->query("SELECT * FROM menu WHERE id=$eid")->fetch_assoc();
@@ -180,21 +180,26 @@ $tab = $_GET['tab'] ?? 'orders';
                             <form method="POST" enctype="multipart/form-data">
                                 <label class="small fw-bold">အမျိုးအစား</label>
                                 <select name="category" class="form-control mb-2">
-                                    <option value="cool drink">Cool Drink</option>
-                                    <option value="hot drink">Hot Drink</option>
-                                    <option value="traditional food">Traditional Food</option>
-                                    <option value="thai food">Thai Food</option>
-                                    <option value="lunch">Lunch</option>
-                                    <option value="dinner">Dinner</option>
-                                    <option value="dessert">Dessert</option>
+                                    <option value="cool drink" <?= $editData['category'] == 'cool drink' ? 'selected' : '' ?>>Cool Drink</option>
+                                    <option value="hot drink" <?= $editData['category'] == 'hot drink' ? 'selected' : '' ?>>Hot Drink</option>
+                                    <option value="traditional food" <?= $editData['category'] == 'traditional food' ? 'selected' : '' ?>>Traditional Food</option>
+                                    <option value="thai food" <?= $editData['category'] == 'thai food' ? 'selected' : '' ?>>Thai Food</option>
+                                    <option value="lunch" <?= $editData['category'] == 'lunch' ? 'selected' : '' ?>>Lunch</option>
+                                    <option value="dinner" <?= $editData['category'] == 'dinner' ? 'selected' : '' ?>>Dinner</option>
+                                    <option value="dessert" <?= $editData['category'] == 'dessert' ? 'selected' : '' ?>>Dessert</option>
                                 </select>
-                                <input type="file" name="image" class="form-control mb-3">
+                                
                                 <label class="small fw-bold">ဟင်းပွဲပုံ</label>
+                                <input type="file" name="image" class="form-control mb-3">
+                                
                                 <input type="hidden" name="id" value="<?= $editData['id'] ?>">
+                                
                                 <label class="small fw-bold">ဟင်းပွဲအမည်</label>
                                 <input type="text" name="name" class="form-control mb-2" value="<?= $editData['name'] ?>" required>
+                                
                                 <label class="small fw-bold">ဈေးနှုန်း</label>
                                 <input type="number" name="price" class="form-control mb-3" value="<?= $editData['price'] ?>" required>
+                                
                                 <?php if (isset($_GET['edit_id'])): ?>
                                     <button name="update_item" class="btn btn-warning w-100 mb-2">Update Item</button>
                                     <a href="?tab=menu" class="btn btn-light w-100 border">Cancel</a>
@@ -205,13 +210,27 @@ $tab = $_GET['tab'] ?? 'orders';
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-8">
                     <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white">
+                            <div class="d-flex flex-wrap gap-2 pt-2">
+                                <button class="btn btn-sm btn-outline-secondary active admin-filter-btn" onclick="filterAdminMenu('all', event)">All</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('cool drink', event)">Cool Drink</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('hot drink', event)">Hot Drink</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('traditional food', event)">Traditional</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('thai food', event)">Thai Food</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('lunch', event)">Lunch</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('dinner', event)">Dinner</button>
+                                <button class="btn btn-sm btn-outline-secondary admin-filter-btn" onclick="filterAdminMenu('dessert', event)">Dessert</button>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Name</th>
+                                        <th>Category</th>
                                         <th>Price</th>
                                         <th>Action</th>
                                     </tr>
@@ -219,9 +238,17 @@ $tab = $_GET['tab'] ?? 'orders';
                                 <tbody>
                                     <?php
                                     $res = $conn->query("SELECT * FROM menu ORDER BY id DESC");
-                                    while ($row = $res->fetch_assoc()): ?>
-                                        <tr>
-                                            <td><?= $row['name'] ?></td>
+                                    while ($row = $res->fetch_assoc()): 
+                                        $cat_slug = trim(strtolower($row['category']));
+                                    ?>
+                                        <tr class="admin-menu-item" data-cat="<?= htmlspecialchars($cat_slug) ?>">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="uploads/<?= $row['image'] ?: 'default.jpg' ?>" width="40" height="40" class="rounded me-2" style="object-fit:cover;">
+                                                    <span class="fw-bold"><?= htmlspecialchars($row['name']) ?></span>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge bg-light text-dark border"><?= strtoupper($row['category']) ?></span></td>
                                             <td><?= number_format($row['price']) ?> K</td>
                                             <td>
                                                 <a href="?tab=menu&edit_id=<?= $row['id'] ?>" class="btn btn-outline-info btn-sm">Edit</a>
@@ -290,6 +317,30 @@ $tab = $_GET['tab'] ?? 'orders';
         // Live Fetch စတင်ခြင်း
         fetchLiveOrders();
         setInterval(fetchLiveOrders, 3000);
+
+
+        // Admin Menu Filter Function
+function filterAdminMenu(category, event) {
+    // Button Active ပြောင်းခြင်း
+    const btns = document.querySelectorAll('.admin-filter-btn');
+    btns.forEach(btn => btn.classList.remove('active', 'btn-secondary'));
+    btns.forEach(btn => btn.classList.add('btn-outline-secondary'));
+    
+    event.currentTarget.classList.add('active', 'btn-secondary');
+    event.currentTarget.classList.remove('btn-outline-secondary');
+
+    const rows = document.querySelectorAll('.admin-menu-item');
+    let filterCat = category.trim().toLowerCase();
+
+    rows.forEach(row => {
+        let rowCat = row.getAttribute('data-cat');
+        if (filterCat === 'all' || rowCat === filterCat) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
     </script>
 </body>
 
