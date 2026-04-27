@@ -2,11 +2,11 @@
 include 'config/db.php';
 $id = $_GET['id'];
 
-// Order အချက်အလက်ယူမယ်
+// take order data
 $order_res = $conn->query("SELECT * FROM orders WHERE id = $id");
 $order = $order_res->fetch_assoc();
 
-// Item အသေးစိတ်တွေကို ဈေးနှုန်းပါအောင် Join လုပ်ပြီးယူမယ်
+// join detail items order
 $items_res = $conn->query("SELECT item_name, price, COUNT(*) as qty, (price * COUNT(*)) as subtotal 
                            FROM order_details 
                            WHERE order_id = $id 
@@ -72,7 +72,7 @@ $items_res = $conn->query("SELECT item_name, price, COUNT(*) as qty, (price * CO
     </table>
     <div class="line"></div>
 
-    <p class="text-center" style="font-size: 12px;">ကျေးဇူးတင်ပါသည်! နောက်လည်း ကြွခဲ့ပါ။</p>
+    <p class="text-center" style="font-size: 12px;">ကျေးဇူးတင်ပါသည်! နောက်တစ်ခေါက်ထပ်လာဖို့ ဖိတ်ခေါ်ပါသည်။</p>
     
     <div class="text-center no-print" style="margin-top: 20px;">
         <button onclick="window.close()" style="padding: 5px 15px; cursor:pointer;">Close</button>

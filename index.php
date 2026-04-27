@@ -7,7 +7,7 @@ include 'config/db.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Order System</title>
+    <title> Smart ကေတုအလင်္ကာ Restaurant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -103,11 +103,11 @@ include 'config/db.php';
             border: 2px solid white;
         }
 
-        /* Status Tracker ကို ပြင်ဆင်ခြင်း */
+        /* Status Tracker */
         .status-tracker {
             position: fixed;
             top: 80px;
-            /* Toggle button ရဲ့ အောက်နားလေးမှာ ပေါ်ဖို့ */
+            /* Toggle button */
             right: 20px;
             width: 300px;
             background: #1e293b;
@@ -117,10 +117,9 @@ include 'config/db.php';
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none;
-            /* အစမှာ ဖျောက်ထားမယ် */
         }
 
-        /* ဖုန်းနဲ့ကြည့်ရင် ပိုအဆင်ပြေအောင် */
+        /* for phone responsive */
         @media (max-width: 576px) {
             .status-tracker {
                 width: calc(100% - 40px);
@@ -129,17 +128,17 @@ include 'config/db.php';
             }
         }
 
-        /* ပုံကို အကွက်ထဲ အပြည့်ဖြစ်အောင် ညှိခြင်း */
+        /* adjust image */
         .menu-img {
             width: 100%;
             height: 180px;
-            /* ပုံအမြင့်ကို ပုံသေသတ်မှတ် */
+            /* constant image's height */
             object-fit: cover;
-            /* ပုံမရှုံ့သွားဘဲ အကွက်ထဲ အပြည့်ဖြည့်မယ် */
+            /* image fit */
             border-bottom: 1px solid #2e344e;
         }
 
-        /* Menu Card ပုံစံ */
+        /* Menu Card */
         .menu-card {
             background: #1e293b;
             border: 1px solid #2e344e;
@@ -147,17 +146,15 @@ include 'config/db.php';
             transition: 0.3s;
             overflow: hidden;
             height: 100%;
-            /* Card အမြင့်တွေကို ညီအောင်ထားမယ် */
         }
 
-        /* ဟင်းပွဲအမည် စာသားပုံစံ */
+        /* name of item */
         .item-name {
             font-size: 1.1rem;
             font-weight: 600;
             color: #ffffff;
             margin-bottom: 5px;
             display: block;
-            /* သေချာပေါ်အောင် block ထားမယ် */
         }
 
         .item-price {
@@ -165,7 +162,7 @@ include 'config/db.php';
             font-size: 0.9rem;
         }
 
-        /* Add Button ပုံစံနှင့် Hover Effect */
+        /* Add Button, Hover Effect */
         .btn-add {
             background: #6366f1;
             color: white;
@@ -178,14 +175,13 @@ include 'config/db.php';
             margin-top: 10px;
         }
 
-        /* Hover ဖြစ်ရင် အရောင်သိပ်မပြောင်းဘဲ နည်းနည်းပဲ လင်းသွားအောင်လုပ်ခြင်း */
+        /* Hover effect for light */
         .btn-add:hover {
             background: #4f46e5;
-            /* အရောင်ရင့်သွားမယ် */
             color: #ffffff !important;
-            /* စာသားဖြူမြဲဖြူနေရမယ် */
+            /* text transform */
             transform: scale(1.02);
-            /* နည်းနည်းလေး ကြီးလာမယ် */
+            /* text scale (big) */
         }
     </style>
 </head>
@@ -215,7 +211,7 @@ include 'config/db.php';
     $mcats = $conn->query("SELECT * FROM main_categories");
     $c = 0;
     while ($mc = $mcats->fetch_assoc()):
-        $name = $mc['name']; // Database ထဲက နာမည်အတိုင်း ယူပါ
+        $name = $mc['name']; // name in Database
     ?>
         <li class="nav-item">
             <button class="nav-link <?= ($c == 0) ? 'active' : '' ?>"
@@ -260,7 +256,7 @@ include 'config/db.php';
 
 <script>
     let cart = [];
-    // my_orders ကော myOrders ကော ငြိမှာစိုးလို့ တစ်ခုပဲ သေချာသုံးမယ်
+    // myOrderIDs
     let myOrderIDs = JSON.parse(localStorage.getItem('myOrders')) || [];
     const tableNo = new URLSearchParams(window.location.search).get('table') || "A1";
     document.getElementById('table-id').innerText = tableNo;
@@ -309,7 +305,7 @@ include 'config/db.php';
             return;
         }
 
-        // မှာထားတာရှိရင် ခလုတ်လေးကို ပြမယ်
+        // Show order items, if order done
         document.getElementById('status-toggle').style.display = 'flex';
         document.getElementById('order-count-badge').innerText = myOrderIDs.length;
 
@@ -346,7 +342,7 @@ include 'config/db.php';
                     </div>`;
 
                     if (isReady) {
-                        // Ready ဖြစ်ပြီး ၁ မိနစ်ကြာရင် list ထဲက ဖြုတ်မယ်
+                        // off, if ready order list, done
                         setTimeout(() => {
                             myOrderIDs = myOrderIDs.filter(oid => oid != id);
                             localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
@@ -375,7 +371,7 @@ include 'config/db.php';
         if (!confirm('ဒီအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?')) return;
 
         try {
-            const res = await fetch('api/cancel_order.php', { // Path ကို သတိထားပါ
+            const res = await fetch('api/cancel_order.php', { // cancel order path
                 method: 'POST',
                 body: JSON.stringify({
                     id: id
@@ -388,9 +384,9 @@ include 'config/db.php';
 
             if (data.success) {
                 alert('Order cancelled successfully');
-                location.reload(); // Page ကို refresh လုပ်ပြီး list ထဲက ဖျက်မယ်
+                location.reload(); // delete with page refresh
             } else {
-                alert(data.message); // "ဟင်းပွဲပြင်ဆင်ပြီးသွားပြီဖြစ်၍..." ဆိုတဲ့စာပြလိမ့်မယ်
+                alert(data.message); // done order , it has done ready
             }
         } catch (e) {
             console.error(e);
@@ -399,23 +395,23 @@ include 'config/db.php';
     }
 
     function filterMainCat(mainCat, element) {
-    // ၁။ Tab အားလုံးရဲ့ Active class နဲ့ Style ကို အရင်ဖြုတ်မယ်
+    // remove tab active class
     document.querySelectorAll('#mainCatTabs .nav-link').forEach(link => {
         link.classList.remove('active');
         link.style.background = 'transparent';
     });
 
-    // ၂။ အခုနှိပ်လိုက်တဲ့ Tab ကို အရောင်ပြောင်းမယ်
+    // change color tab
     element.classList.add('active');
     element.style.background = '#6366f1';
 
-    // ၃။ Menu Item Card တွေအားလုံးကို ယူပြီး စစ်မယ်
+    // check menu items all
     const cards = document.querySelectorAll('.menu-item-card');
 
     cards.forEach(card => {
         const cardCat = card.getAttribute('data-main-cat');
         
-        // Database က category နဲ့ Tab က name နဲ့ တူရင် ပြမယ်
+        // show name both are same (db and category card)
         if (mainCat === 'all' || cardCat === mainCat) {
             card.style.display = 'block';
         } else {

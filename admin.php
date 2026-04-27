@@ -2,15 +2,15 @@
 session_start();
 include 'config/db.php';
 
-// Login ဝင်မထားလျှင် login.php သို့ ပြန်ပို့မည်
+// render to login.php if not login
 if (!isset($_SESSION['admin_logged'])) {
     header("Location: login.php");
     exit;
 }
 
-// --- CRUD & LOGIC ---
+// --- CRUD  ---
 
-// Edit အတွက် အချက်အလက်ယူခြင်း
+// take data for editing
 $editData = null;
 if (isset($_GET['edit_menu'])) {
     $eid = (int)$_GET['edit_menu'];
@@ -18,7 +18,7 @@ if (isset($_GET['edit_menu'])) {
     $editData = $res->fetch_assoc();
 }
 
-// Menu Update လုပ်ခြင်း
+// Menu Update 
 if (isset($_POST['update_menu'])) {
     $id = (int)$_POST['menu_id'];
     $name = $conn->real_escape_string($_POST['name']);
@@ -38,13 +38,13 @@ if (isset($_POST['update_menu'])) {
     exit;
 }
 
-// Main Category အသစ်ထည့်ခြင်း
+// Main Category 
 if (isset($_POST['add_main_category'])) {
     $nm = $conn->real_escape_string($_POST['new_main_cat']);
     $conn->query("INSERT INTO main_categories (name) VALUES ('$nm')");
 }
 
-// Main Category ဖျက်ခြင်း
+// Main Category delete
 if (isset($_GET['del_main'])) {
     $did = (int)$_GET['del_main'];
     $conn->query("DELETE FROM main_categories WHERE id=$did");
@@ -52,14 +52,14 @@ if (isset($_GET['del_main'])) {
     exit;
 }
 
-// Sub Category အသစ်ထည့်ခြင်း
+// Add Sub Category 
 if (isset($_POST['add_category'])) {
     $m = $conn->real_escape_string($_POST['main_cat']);
     $s = $conn->real_escape_string($_POST['sub_cat_name']);
     $conn->query("INSERT INTO categories (main_category, sub_category_name) VALUES ('$m', '$s')");
 }
 
-// Sub Category ဖျက်ခြင်း
+// Sub Category delete
 if (isset($_GET['del_cat'])) {
     $did = (int)$_GET['del_cat'];
     $conn->query("DELETE FROM categories WHERE id=$did");
@@ -67,7 +67,7 @@ if (isset($_GET['del_cat'])) {
     exit;
 }
 
-// ဟင်းပွဲအသစ်ထည့်ခြင်း
+// add new items(category)
 if (isset($_POST['add_item'])) {
     $n = $conn->real_escape_string($_POST['name']);
     $p = (int)$_POST['price'];
@@ -82,7 +82,7 @@ if (isset($_POST['add_item'])) {
     $conn->query("INSERT INTO menu (name, price, image, category, main_category) VALUES ('$n', $p, '$img', '$cat', '$main_cat')");
 }
 
-// ဟင်းပွဲဖျက်ခြင်း
+// delete
 if (isset($_GET['delete_id'])) {
     $id = (int)$_GET['delete_id'];
     $conn->query("DELETE FROM menu WHERE id=$id");
@@ -111,7 +111,7 @@ $tab = $_GET['tab'] ?? 'orders';
 
     <nav class="navbar navbar-dark bg-dark mb-4 shadow-sm">
         <div class="container-fluid px-4">
-            <span class="navbar-brand fw-bold">🚀 Smart ကေတုအလင်္ကာ Restaurant</span>
+            <span class="navbar-brand fw-bold"> Smart ကေတုအလင်္ကာ Restaurant</span>
             <a href="logout.php" class="btn btn-danger btn-sm">Logout</a>
         </div>
     </nav>

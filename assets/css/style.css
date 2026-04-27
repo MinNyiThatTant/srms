@@ -1,6 +1,5 @@
-/* Card ပုံစံကို ပိုလှအောင် ပြင်ခြင်း */
 .menu-card {
-    background: #1e293b !important; /* နည်းနည်း ပိုလင်းတဲ့ နက်ပြာရောင် */
+    background: #1e293b !important; /* light */
     border-radius: 20px !important;
 }
 
@@ -9,10 +8,10 @@
 }
 
 .menu-card:hover img {
-    transform: scale(1.1); /* Hover လုပ်ရင် ပုံလေး နည်းနည်း ကြီးလာမယ် */
+    transform: scale(1.1); /* big, if hover */
 }
 
-/* Button ကို ဝိုင်းဝိုင်းလေး လုပ်မယ် */
+/* Add Button with Rounded Corners */
 .btn-add {
     border-radius: 50px !important;
     padding: 8px 15px;

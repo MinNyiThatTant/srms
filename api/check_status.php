@@ -4,7 +4,7 @@ include '../config/db.php';
 if(!isset($_GET['id'])) exit;
 $id = (int)$_GET['id'];
 
-// Status နဲ့ မှာထားတဲ့ Item တွေကို အရေအတွက်အလိုက် Group ဖွဲ့ပြီး ဆွဲထုတ်မယ်
+// fetch order status and item details
 $res = $conn->query("SELECT o.status, 
                      (SELECT GROUP_CONCAT(CONCAT(item_name, ' (x', qty, ')') SEPARATOR '|') 
                       FROM (SELECT order_id, item_name, COUNT(*) as qty 

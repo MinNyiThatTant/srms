@@ -2,7 +2,7 @@
 session_start();
 include 'config/db.php';
 
-// အကယ်၍ login ဝင်ထားပြီးသားဆိုရင် dashboard ကို တန်းပို့မယ်
+// render to dashboard, already login
 if(isset($_SESSION['admin_logged'])) {
     header("Location: admin.php");
     exit;
@@ -12,7 +12,7 @@ if(isset($_POST['login'])) {
     $user = $_POST['user'];
     $pass = $_POST['pass'];
 
-    // အလွယ်တကူ username: admin / password: admin123 လို့ သတ်မှတ်ထားပါတယ်
+    // set username, passcode
     if($user == "admin" && $pass == "admin123") {
         $_SESSION['admin_logged'] = true;
         header("Location: admin.php");
@@ -41,8 +41,8 @@ if(isset($_POST['login'])) {
 
 <div class="card login-card p-4">
     <div class="text-center mb-4">
-        <h3 class="fw-bold text-dark">Smart Admin</h3>
-        <p class="text-muted">စနစ်အတွင်းသို့ ဝင်ရောက်ပါ</p>
+        <h3 class="fw-bold text-dark">Smart Admin Page</h3>
+        <p class="text-muted">System အတွင်းသို့ ဝင်ရောက်ပါ</p>
     </div>
 
     <?php if(isset($error)): ?>

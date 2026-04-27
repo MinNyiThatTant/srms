@@ -8,7 +8,6 @@ if (!isset($_SESSION['admin_logged'])) {
 }
 
 // --- CRUD LOGIC ---
-// --- Admin.php ရဲ့ အပေါ်ဆုံး PHP အပိုင်းမှာ ဒါလေး ထည့်ပါ ---
 
 $editData = null;
 if (isset($_GET['edit_menu'])) {
@@ -17,7 +16,7 @@ if (isset($_GET['edit_menu'])) {
     $editData = $res->fetch_assoc();
 }
 
-// Update လုပ်တဲ့ Logic
+// Update Menu Item
 if (isset($_POST['update_menu'])) {
     $id = (int)$_POST['menu_id'];
     $name = $conn->real_escape_string($_POST['name']);
@@ -25,7 +24,7 @@ if (isset($_POST['update_menu'])) {
     $main_cat = $conn->real_escape_string($_POST['main_cat']);
     $sub_cat = $conn->real_escape_string($_POST['sub_cat']);
 
-    // ပုံအသစ်တင်ရင်
+    // Image update is optional, only if a new image is uploaded
     if ($_FILES['image']['name']) {
         $img = time() . '_' . $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], "uploads/" . $img);
@@ -402,7 +401,7 @@ $tab = $_GET['tab'] ?? 'orders';
         };
 
 
-        // admin.php ရဲ့ script အပိုင်းထဲမှာ ဒါလေးရှိနေဖို့ လိုပါတယ်
+        // update menu item, filter sub categories based on main category
         function updateSubCategories() {
             const mainCat = document.getElementById('mainCatSelect').value;
             const subCatSelect = document.getElementById('subCatSelect');
@@ -429,7 +428,7 @@ $tab = $_GET['tab'] ?? 'orders';
             }
         }
 
-        // Edit Mode ဖြစ်နေရင် ချက်ချင်း run ပေးဖို့
+        // Edit Mode run
         <?php if ($editData): ?>
             document.addEventListener('DOMContentLoaded', updateSubCategories);
         <?php endif; ?>

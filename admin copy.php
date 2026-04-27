@@ -31,7 +31,7 @@
     <h1>👨‍🍳 Active Kitchen Orders</h1>
     <div class="card-grid" id="order-display">
         <?php
-        // Pending ဖြစ်နေတဲ့ Order တွေကို အရင်ဆုံးပြမယ်
+        // show first pending
         $orders = $conn->query("SELECT * FROM orders WHERE status='pending' ORDER BY id DESC");
         while($o = $orders->fetch_assoc()):
             $oid = $o['id'];
@@ -65,8 +65,8 @@
     <h2>📋 Table & QR Manager</h2>
     <div class="card-grid">
         <?php 
-        $tables = [1, 2, 3, 4, 5]; // စားပွဲအရေအတွက်
-        $my_ip = "192.168.1.5";    // သင့် Laptop/Pi ရဲ့ IP ကို ဒီမှာ ပြင်ပါ
+        $tables = [1, 2, 3, 4, 5]; 
+        $my_ip = "192.168.0.15";    // server IP 
         foreach($tables as $t): 
             $qr_link = "http://$my_ip/srms/index.php?table=$t";
         ?>
@@ -97,10 +97,8 @@
         }
     }
 
-    // ၅ စက္ကန့်တစ်ခါ Order အသစ် ရှိမရှိ စစ်မယ်
+    // check new order after 5 seconds
     setInterval(() => {
-        // ဒီနေရာမှာ AJAX နဲ့ Page မ Refresh ဘဲ စစ်လို့ရအောင် လုပ်လို့ရပါတယ်
-        // အခုလောလောဆယ်တော့ ရှင်းအောင် အလိုအလျောက် reload လုပ်ခိုင်းထားမယ်
         // location.reload(); 
     }, 10000);
 </script>

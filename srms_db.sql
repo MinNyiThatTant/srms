@@ -47,19 +47,19 @@ ALTER TABLE categories MODIFY COLUMN main_category ENUM('Food', 'Drink', 'Desser
 
 ALTER TABLE menu MODIFY COLUMN main_category ENUM('Food', 'Drink', 'Dessert', 'Snack') NOT NULL;
 
--- ၁။ Main Categories table အသစ်ဆောက်မယ်
+-- Main Categories table 
 CREATE TABLE main_categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
--- ၂။ အရင်ရှိပြီးသား category table ကို VARCHAR ပြောင်းမယ်
+--  change varchar (categories->main_category)
 ALTER TABLE categories MODIFY COLUMN main_category VARCHAR(100) NOT NULL;
 
--- ၃။ Menu table ကိုလည်း VARCHAR ပြောင်းမယ်
+-- change varchar (menu->main_category)
 ALTER TABLE menu MODIFY COLUMN main_category VARCHAR(100) NOT NULL;
 
--- ၄။ အစမ်း data အချို့ ထည့်ထားမယ်
+-- add test data
 INSERT INTO main_categories (name) VALUES ('Food'), ('Drink'), ('Dessert');
 
 ALTER TABLE menu MODIFY COLUMN main_category VARCHAR(100) NOT NULL;
