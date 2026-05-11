@@ -52,20 +52,6 @@ if (isset($_GET['del_main'])) {
     exit;
 }
 
-// Add Sub Category 
-if (isset($_POST['add_category'])) {
-    $m = $conn->real_escape_string($_POST['main_cat']);
-    $s = $conn->real_escape_string($_POST['sub_cat_name']);
-    $conn->query("INSERT INTO categories (main_category, sub_category_name) VALUES ('$m', '$s')");
-}
-
-// Sub Category delete
-if (isset($_GET['del_cat'])) {
-    $did = (int)$_GET['del_cat'];
-    $conn->query("DELETE FROM categories WHERE id=$did");
-    header("Location: admin.php?tab=categories");
-    exit;
-}
 
 // add new items(category)
 if (isset($_POST['add_item'])) {
@@ -162,37 +148,12 @@ $tab = $_GET['tab'] ?? 'orders';
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card p-3">
-                        <h6 class="fw-bold">Sub Category ပေါင်းရန်</h6>
-                        <form method="POST">
-                            <select name="main_cat" class="form-control mb-2" required>
-                                <?php $mc = $conn->query("SELECT * FROM main_categories");
-                                while ($r = $mc->fetch_assoc()) echo "<option value='{$r['name']}'>{$r['name']}</option>"; ?>
-                            </select>
-                            <div class="d-flex gap-2">
-                                <input type="text" name="sub_cat_name" class="form-control" placeholder="ဥပမာ- ခေါက်ဆွဲ" required>
-                                <button name="add_category" class="btn btn-dark">ထည့်မည်</button>
-                            </div>
-                        </form>
-                        <hr>
-                        <ul class="list-group shadow-sm">
-                            <?php $sc = $conn->query("SELECT * FROM categories");
-                            while ($r = $sc->fetch_assoc()): ?>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span><?= $r['sub_category_name'] ?> <small class="text-muted">(<?= $r['main_category'] ?>)</small></span>
-                                    <a href="?tab=categories&del_cat=<?= $r['id'] ?>" class="text-danger fw-bold" style="text-decoration:none;">&times;</a>
-                                </li>
-                            <?php endwhile; ?>
-                        </ul>
-                    </div>
-                </div>
             </div>
 
         <?php elseif ($tab == 'menu'): ?>
             <?php if ($editData): ?>
                 <div class="card p-4 mb-4 border-warning" style="background: #2d3748; color: white;">
-                    <h6 class="text-warning fw-bold mb-3">📝 Edit Menu Item</h6>
+                    <h6 class="text-warning fw-bold mb-3">Edit Menu Item</h6>
                     <form method="POST" enctype="multipart/form-data" class="row g-3">
                         <input type="hidden" name="menu_id" value="<?= $editData['id'] ?>">
                         <div class="col-md-3">

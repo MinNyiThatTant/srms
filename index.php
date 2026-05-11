@@ -22,30 +22,123 @@ include 'config/db.php';
             border-color: #6366f1;
         }
 
+        /* Quantity selector styles */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #2d3a4e;
+            border-radius: 40px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        .qty-btn {
+            background: #0f172a;
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .qty-btn:hover {
+            background: #6366f1;
+        }
+        .qty-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* Floating Status Toggle Button */
+        .status-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #6366f1;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            border: 2px solid white;
+        }
+
+        .status-tracker {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 300px;
+            background: #1e293b;
+            border: 1px solid #6366f1;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        @media (max-width: 576px) {
+            .status-tracker {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #2e344e;
+        }
+
+        .menu-card {
+            background: #1e293b;
+            border: 1px solid #2e344e;
+            border-radius: 20px;
+            transition: 0.3s;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .item-price {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
         .btn-add {
             background: #6366f1;
             color: white;
             border: none;
+            transition: 0.3s;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 50px;
             font-weight: bold;
-            padding: 8px;
+            padding: 10px;
+            margin-top: 10px;
         }
-
-        /* Floating Status Tracker */
-        /* .status-tracker {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            width: 280px;
-            background: #1e293b;
-            border: 1px solid #6366f1;
-            border-radius: 15px;
-            padding: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-        } */
+        .btn-add:hover {
+            background: #4f46e5;
+            transform: scale(1.02);
+        }
 
         .cart-bar {
             position: fixed;
@@ -71,117 +164,9 @@ include 'config/db.php';
             border-radius: 10px;
             margin: 0 2px;
         }
-
         .nav-pills .nav-link.active {
             background-color: #6366f1 !important;
             color: white;
-        }
-
-        .btn-sub {
-            border-radius: 20px;
-            white-space: nowrap;
-            font-size: 12px;
-            margin-right: 5px;
-        }
-
-        /* Floating Status Toggle Button */
-        .status-toggle-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #6366f1;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            z-index: 1001;
-            border: 2px solid white;
-        }
-
-        /* Status Tracker */
-        .status-tracker {
-            position: fixed;
-            top: 80px;
-            /* Toggle button */
-            right: 20px;
-            width: 300px;
-            background: #1e293b;
-            border: 1px solid #6366f1;
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-        }
-
-        /* for phone responsive */
-        @media (max-width: 576px) {
-            .status-tracker {
-                width: calc(100% - 40px);
-                right: 20px;
-                left: 20px;
-            }
-        }
-
-        /* adjust image */
-        .menu-img {
-            width: 100%;
-            height: 180px;
-            /* constant image's height */
-            object-fit: cover;
-            /* image fit */
-            border-bottom: 1px solid #2e344e;
-        }
-
-        /* Menu Card */
-        .menu-card {
-            background: #1e293b;
-            border: 1px solid #2e344e;
-            border-radius: 20px;
-            transition: 0.3s;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        /* name of item */
-        .item-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .item-price {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        /* Add Button, Hover Effect */
-        .btn-add {
-            background: #6366f1;
-            color: white;
-            border: none;
-            transition: 0.3s;
-            width: 100%;
-            border-radius: 50px;
-            font-weight: bold;
-            padding: 10px;
-            margin-top: 10px;
-        }
-
-        /* Hover effect for light */
-        .btn-add:hover {
-            background: #4f46e5;
-            color: #ffffff !important;
-            /* text transform */
-            transform: scale(1.02);
-            /* text scale (big) */
         }
     </style>
 </head>
@@ -207,22 +192,20 @@ include 'config/db.php';
         </div>
 
         <ul class="nav nav-pills nav-justified mb-3 bg-dark p-1 shadow-sm" style="border-radius: 12px;" id="mainCatTabs">
-    <?php
-    $mcats = $conn->query("SELECT * FROM main_categories");
-    $c = 0;
-    while ($mc = $mcats->fetch_assoc()):
-        $name = $mc['name']; // name in Database
-    ?>
-        <li class="nav-item">
-            <button class="nav-link <?= ($c == 0) ? 'active' : '' ?>"
-                onclick="filterMainCat('<?= $name ?>', this)">
-                <?= htmlspecialchars($mc['name']) ?>
-            </button>
-        </li>
-    <?php $c++; endwhile; ?>
-</ul>
-
-        <!-- <div class="category-scroll d-flex overflow-auto pb-2 mb-3" id="subCatContainer"></div> -->
+        <?php
+        $mcats = $conn->query("SELECT * FROM main_categories");
+        $c = 0;
+        while ($mc = $mcats->fetch_assoc()):
+            $name = $mc['name'];
+        ?>
+            <li class="nav-item">
+                <button class="nav-link <?= ($c == 0) ? 'active' : '' ?>"
+                    onclick="filterMainCat('<?= $name ?>', this)">
+                    <?= htmlspecialchars($mc['name']) ?>
+                </button>
+            </li>
+        <?php $c++; endwhile; ?>
+        </ul>
 
         <div class="row g-3" id="menu-container">
             <?php
@@ -232,194 +215,226 @@ include 'config/db.php';
             ?>
                 <div class="col-6 col-md-4 col-lg-3 mb-4 menu-item-card" data-main-cat="<?= $row['main_category'] ?>">
                     <div class="menu-card shadow-sm">
-                
-                <img src="uploads/<?= $row['image'] ?>" class="menu-img" alt="<?= htmlspecialchars($row['name']) ?>">
-
-                <div class="p-3">
-                    <strong class="item-name"><?= htmlspecialchars($row['name']) ?></strong>
-
-                    <div class="item-price"><?= number_format($row['price']) ?> MMK</div>
-
-                    <button class="btn-add" onclick="addToCart('<?= addslashes($row['name']) ?>', <?= $row['price'] ?>)">
-                        Add +
-                    </button>
+                        <img src="uploads/<?= $row['image'] ?>" class="menu-img" alt="<?= htmlspecialchars($row['name']) ?>">
+                        <div class="p-3">
+                            <strong class="item-name"><?= htmlspecialchars($row['name']) ?></strong>
+                            <div class="item-price"><?= number_format($row['price']) ?> MMK</div>
+                            
+                            <!-- Quantity selector instead of simple Add button -->
+                            <div class="quantity-selector" data-name="<?= htmlspecialchars($row['name']) ?>" data-price="<?= $row['price'] ?>">
+                                <button class="qty-btn qty-minus">−</button>
+                                <span class="qty-display">0</span>
+                                <button class="qty-btn qty-plus">+</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            <?php endwhile; ?>
         </div>
     </div>
-<?php endwhile; ?>
-</div>
-</div>
 
-<div class="cart-bar shadow" onclick="placeOrder()">
-    🛒 Confirm Order (<span id="cart-count">0</span>) - <span id="cart-total">0</span> K
-</div>
+    <div class="cart-bar shadow" onclick="placeOrder()">
+        🛒 Confirm Order (<span id="cart-count">0</span> items) - <span id="cart-total">0</span> K
+    </div>
 
-<script>
-    let cart = [];
-    // myOrderIDs
-    let myOrderIDs = JSON.parse(localStorage.getItem('myOrders')) || [];
-    const tableNo = new URLSearchParams(window.location.search).get('table') || "A1";
-    document.getElementById('table-id').innerText = tableNo;
+    <script>
+        // Cart object: key = item name, value = { price, quantity }
+        let cartQuantities = {};
+        let myOrderIDs = JSON.parse(localStorage.getItem('myOrders')) || [];
+        const tableNo = new URLSearchParams(window.location.search).get('table') || "A1";
+        document.getElementById('table-id').innerText = tableNo;
 
-    
-
-    function addToCart(name, price) {
-        cart.push({
-            name,
-            price
-        });
-        document.getElementById('cart-count').innerText = cart.length;
-        document.getElementById('cart-total').innerText = cart.reduce((s, i) => s + i.price, 0).toLocaleString();
-    }
-
-    async function placeOrder() {
-        if (cart.length === 0) return alert("ဟင်းပွဲအရင်ရွေးပါ");
-        const res = await fetch('api/place_order.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                table: tableNo,
-                items: cart
-            })
-        });
-        const result = await res.json();
-        if (result.success) {
-            myOrderIDs.push(result.order_id);
-            localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
-            alert("Order တင်ပြီးပါပြီ!");
-            cart = [];
-            location.reload();
-        }
-    }
-
-    function toggleStatusBox() {
-        const box = document.getElementById('status-tracker');
-        box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
-    }
-
-    function startLiveTracking() {
-        if (myOrderIDs.length === 0) {
-            document.getElementById('status-toggle').style.display = 'none';
-            return;
+        // Update the bottom cart bar totals and item count
+        function updateCartUI() {
+            let totalItems = 0;
+            let totalPrice = 0;
+            for (let name in cartQuantities) {
+                let qty = cartQuantities[name].quantity;
+                let price = cartQuantities[name].price;
+                totalItems += qty;
+                totalPrice += qty * price;
+            }
+            document.getElementById('cart-count').innerText = totalItems;
+            document.getElementById('cart-total').innerText = totalPrice.toLocaleString();
         }
 
-        // Show order items, if order done
-        document.getElementById('status-toggle').style.display = 'flex';
-        document.getElementById('order-count-badge').innerText = myOrderIDs.length;
-
-        setInterval(async () => {
-            let html = "";
-            let activeOrders = 0;
-
-            for (let id of myOrderIDs) {
-                try {
-                    const res = await fetch(`api/check_status.php?id=${id}`);
-                    const data = await res.json();
-
-                    if (!data || data.status === 'not found') continue;
-                    activeOrders++;
-
-                    let currentStatus = data.status.toLowerCase();
-                    let isPending = (currentStatus === 'pending');
-                    let isReady = (currentStatus === 'ready');
-
-                    html += `
-                    <div class="mb-3 p-2 border border-secondary rounded bg-dark shadow-sm">
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <strong class="text-info" style="font-size: 12px;">Order #${id}</strong>
-                            <span class="badge ${isPending ? 'bg-warning text-dark' : 'bg-success'}" style="font-size: 10px;">
-                                ${isPending ? '👨‍🍳 Cooking' : '✅ Ready'}
-                            </span>
-                        </div>
-                        <div class="small text-light mb-2" style="font-size: 11px; opacity: 0.8;">
-                            ${data.item_details ? data.item_details.replace(/\|/g, ', ') : ''}
-                        </div>
-                        ${isPending ? `
-                            <button class="btn btn-danger btn-xs w-100 py-1" style="font-size: 10px;" onclick="cancelOrder(${id})">Cancel</button>
-                        ` : ''}
-                    </div>`;
-
-                    if (isReady) {
-                        // off, if ready order list, done
-                        setTimeout(() => {
-                            myOrderIDs = myOrderIDs.filter(oid => oid != id);
-                            localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
-                        }, 60000);
-                    }
-                } catch (e) {}
+        // Update the displayed quantity on the specific menu card
+        function updateDisplayQuantity(itemName) {
+            const selectorDiv = document.querySelector(`.quantity-selector[data-name="${itemName.replace(/"/g, '\\"')}"]`);
+            if (selectorDiv) {
+                const displaySpan = selectorDiv.querySelector('.qty-display');
+                const currentQty = cartQuantities[itemName] ? cartQuantities[itemName].quantity : 0;
+                displaySpan.innerText = currentQty;
             }
+        }
 
-            document.getElementById('status-list').innerHTML = html;
-            document.getElementById('order-count-badge').innerText = activeOrders;
-
-            if (activeOrders === 0) {
-                document.getElementById('status-toggle').style.display = 'none';
-                document.getElementById('status-tracker').style.display = 'none';
+        // Change quantity for a given item (delta = +1 or -1)
+        function changeQuantity(itemName, price, delta) {
+            if (!cartQuantities[itemName]) {
+                cartQuantities[itemName] = { price: price, quantity: 0 };
             }
-        }, 5000);
-    }
+            let newQty = cartQuantities[itemName].quantity + delta;
+            if (newQty < 0) newQty = 0;
+            cartQuantities[itemName].quantity = newQty;
+            // If quantity becomes 0, keep entry but we can optionally delete it (keeping is fine for simplicity)
+            if (newQty === 0) {
+                // optional: delete cartQuantities[itemName];
+            }
+            updateDisplayQuantity(itemName);
+            updateCartUI();
+        }
 
-    window.onload = () => {
-        const firstTab = document.querySelector('#mainCatTabs .nav-link.active');
-        if (firstTab) firstTab.click();
-        startLiveTracking();
-    };
+        // Event delegation for all quantity buttons (since menu items are generated by PHP)
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            if (target.classList.contains('qty-plus') || target.classList.contains('qty-minus')) {
+                const selectorDiv = target.closest('.quantity-selector');
+                if (!selectorDiv) return;
+                const itemName = selectorDiv.getAttribute('data-name');
+                const price = parseFloat(selectorDiv.getAttribute('data-price'));
+                const delta = target.classList.contains('qty-plus') ? 1 : -1;
+                changeQuantity(itemName, price, delta);
+                e.stopPropagation();
+            }
+        });
 
-    async function cancelOrder(id) {
-        if (!confirm('ဒီအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?')) return;
-
-        try {
-            const res = await fetch('api/cancel_order.php', { // cancel order path
-                method: 'POST',
-                body: JSON.stringify({
-                    id: id
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
+        // Place order: send all items with quantity > 0 to server
+        async function placeOrder() {
+            let itemsToSend = [];
+            for (let name in cartQuantities) {
+                let qty = cartQuantities[name].quantity;
+                if (qty > 0) {
+                    itemsToSend.push({
+                        name: name,
+                        price: cartQuantities[name].price,
+                        quantity: qty
+                    });
                 }
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                alert('Order cancelled successfully');
-                location.reload(); // delete with page refresh
-            } else {
-                alert(data.message); // done order , it has done ready
             }
-        } catch (e) {
-            console.error(e);
-            alert('Error cancelling order');
+            if (itemsToSend.length === 0) {
+                alert("ဟင်းပွဲအရင်ရွေးပါ (အနည်းဆုံး 1 ပွဲရွေးပါ)");
+                return;
+            }
+            const res = await fetch('api/place_order.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    table: tableNo,
+                    items: itemsToSend
+                })
+            });
+            const result = await res.json();
+            if (result.success) {
+                myOrderIDs.push(result.order_id);
+                localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
+                alert("Order တင်ပြီးပါပြီ!");
+                // Reset cart
+                cartQuantities = {};
+                // Reset all quantity displays to 0
+                document.querySelectorAll('.quantity-selector .qty-display').forEach(span => span.innerText = '0');
+                updateCartUI();
+                location.reload(); // optional: reload to refresh status tracker
+            } else {
+                alert("Order မအောင်မြင်ပါ: " + (result.message || ""));
+            }
         }
-    }
 
-    function filterMainCat(mainCat, element) {
-    // remove tab active class
-    document.querySelectorAll('#mainCatTabs .nav-link').forEach(link => {
-        link.classList.remove('active');
-        link.style.background = 'transparent';
-    });
-
-    // change color tab
-    element.classList.add('active');
-    element.style.background = '#6366f1';
-
-    // check menu items all
-    const cards = document.querySelectorAll('.menu-item-card');
-
-    cards.forEach(card => {
-        const cardCat = card.getAttribute('data-main-cat');
-        
-        // show name both are same (db and category card)
-        if (mainCat === 'all' || cardCat === mainCat) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
+        function toggleStatusBox() {
+            const box = document.getElementById('status-tracker');
+            box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
         }
-    });
-}
-</script>
+
+        function startLiveTracking() {
+            if (myOrderIDs.length === 0) {
+                document.getElementById('status-toggle').style.display = 'none';
+                return;
+            }
+            document.getElementById('status-toggle').style.display = 'flex';
+            document.getElementById('order-count-badge').innerText = myOrderIDs.length;
+
+            setInterval(async () => {
+                let html = "";
+                let activeOrders = 0;
+                for (let id of myOrderIDs) {
+                    try {
+                        const res = await fetch(`api/check_status.php?id=${id}`);
+                        const data = await res.json();
+                        if (!data || data.status === 'not found') continue;
+                        activeOrders++;
+                        let isPending = (data.status.toLowerCase() === 'pending');
+                        let isReady = (data.status.toLowerCase() === 'ready');
+                        html += `
+                        <div class="mb-3 p-2 border border-secondary rounded bg-dark shadow-sm">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <strong class="text-info" style="font-size: 12px;">Order #${id}</strong>
+                                <span class="badge ${isPending ? 'bg-warning text-dark' : 'bg-success'}" style="font-size: 10px;">
+                                    ${isPending ? '👨‍🍳 Cooking' : '✅ Ready'}
+                                </span>
+                            </div>
+                            <div class="small text-light mb-2" style="font-size: 11px; opacity: 0.8;">
+                                ${data.item_details ? data.item_details.replace(/\|/g, ', ') : ''}
+                            </div>
+                            ${isPending ? `
+                                <button class="btn btn-danger btn-xs w-100 py-1" style="font-size: 10px;" onclick="cancelOrder(${id})">Cancel</button>
+                            ` : ''}
+                        </div>`;
+                        if (isReady) {
+                            setTimeout(() => {
+                                myOrderIDs = myOrderIDs.filter(oid => oid != id);
+                                localStorage.setItem('myOrders', JSON.stringify(myOrderIDs));
+                            }, 60000);
+                        }
+                    } catch(e) {}
+                }
+                document.getElementById('status-list').innerHTML = html;
+                document.getElementById('order-count-badge').innerText = activeOrders;
+                if (activeOrders === 0) {
+                    document.getElementById('status-toggle').style.display = 'none';
+                    document.getElementById('status-tracker').style.display = 'none';
+                }
+            }, 5000);
+        }
+
+        async function cancelOrder(id) {
+            if (!confirm('ဒီအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?')) return;
+            try {
+                const res = await fetch('api/cancel_order.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: id }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Order cancelled successfully');
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            } catch(e) {
+                console.error(e);
+                alert('Error cancelling order');
+            }
+        }
+
+        function filterMainCat(mainCat, element) {
+            document.querySelectorAll('#mainCatTabs .nav-link').forEach(link => {
+                link.classList.remove('active');
+                link.style.background = 'transparent';
+            });
+            element.classList.add('active');
+            element.style.background = '#6366f1';
+            const cards = document.querySelectorAll('.menu-item-card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-main-cat');
+                card.style.display = (mainCat === 'all' || cardCat === mainCat) ? 'block' : 'none';
+            });
+        }
+
+        window.onload = () => {
+            const firstTab = document.querySelector('#mainCatTabs .nav-link.active');
+            if (firstTab) firstTab.click();
+            startLiveTracking();
+        };
+    </script>
 </body>
-
 </html>
