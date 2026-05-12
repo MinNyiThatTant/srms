@@ -46,6 +46,7 @@ $items_res = $conn->query("SELECT item_name, price, COUNT(*) as qty, (price * CO
                 <th align="left">Item</th>
                 <th align="center">Qty</th>
                 <th align="right">Price</th>
+                <th align="right">Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +58,7 @@ $items_res = $conn->query("SELECT item_name, price, COUNT(*) as qty, (price * CO
             <tr>
                 <td><?= $item['item_name'] ?></td>
                 <td align="center"><?= $item['qty'] ?></td>
+                <td align="right"><?= number_format($item['price']) ?></td>
                 <td align="right"><?= number_format($item['subtotal']) ?></td>
             </tr>
             <?php endwhile; ?>
