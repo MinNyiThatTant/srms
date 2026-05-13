@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin_logged'])) {
     exit;
 }
 
-// --- CRUD  ---
+// CRUD
 
 // take data for editing
 $editData = null;
@@ -96,9 +96,11 @@ $tab = $_GET['tab'] ?? 'orders';
 <body>
 
     <nav class="navbar navbar-dark bg-dark mb-4 shadow-sm">
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-4 d-flex justify-content-between">
             <span class="navbar-brand fw-bold"> Smart ကေတုအလင်္ကာ Restaurant</span>
+            <div class="d-flex gap-2">
             <a href="logout.php" class="btn btn-danger btn-sm">Logout</a>
+            </div>
         </div>
     </nav>
 
@@ -235,7 +237,7 @@ $tab = $_GET['tab'] ?? 'orders';
                                             <td>
                                                 <div class="btn-group">
                                                     <a href="admin.php?tab=menu&edit_menu=<?= $row['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                                    <a href="?tab=menu&delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('ဖျက်မလား?')">Del</a>
+                                                    <a href="?tab=menu&delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('ဖျက်မလား?')">Delete</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -248,48 +250,50 @@ $tab = $_GET['tab'] ?? 'orders';
             </div>
 
         <?php elseif ($tab == 'history'): ?>
-            <div class="card p-3">
-                <div class="d-flex justify-content-between mb-3 align-items-center">
-                    <h5 class="fw-bold mb-0">ရောင်းအားမှတ်တမ်း (Completed)</h5>
-                    <button onclick="window.print()" class="btn btn-sm btn-outline-secondary">Print Report</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Date</th>
-                                <th>Table</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $hist = $conn->query("SELECT * FROM orders WHERE status IN ('ready','delivered') ORDER BY id DESC LIMIT 100");
-                            $grand_total = 0;
-                            while ($row = $hist->fetch_assoc()):
-                                $grand_total += $row['total_price'];
-                            ?>
-                                <tr>
-                                    <td><?= date('d-M-Y h:i A', strtotime($row['created_at'])) ?></td>
-                                    <td>Table <?= $row['table_no'] ?></td>
-                                    <td><?= number_format($row['total_price']) ?> K</td>
-                                    <td><span class="badge bg-success">Paid</span></td>
-                                </tr>
-                            <?php endwhile; ?>
-                            <tr class="table-info fw-bold">
-                                <td colspan="2" class="text-end">စုစုပေါင်း ရောင်းအား:</td>
-                                <td colspan="2"><?= number_format($grand_total) ?> MMK</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        <?php endif; ?>
+    <div class="card p-3">
+        <div class="d-flex justify-content-between mb-3 align-items-center">
+            <h5 class="fw-bold mb-0">ရောင်းအားမှတ်တမ်း</h5>
+            <button onclick="window.print()" class="btn btn-sm btn-outline-secondary">Print Report</button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Table</th>
+                        <th>Total Amount</th>
+                        <th>Bill</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $hist = $conn->query("SELECT * FROM orders WHERE status IN ('ready','delivered') ORDER BY id DESC LIMIT 100");
+                    $grand_total = 0;
+                    while ($row = $hist->fetch_assoc()):
+                        $grand_total += $row['total_price'];
+                    ?>
+                        <tr>
+                            <td><?= date('d-M-Y h:i A', strtotime($row['created_at'])) ?></td>
+                            <td>Table <?= $row['table_no'] ?></td>
+                            <td><?= number_format($row['total_price']) ?> K</td>
+                            <td>
+                                <a href="print_receipt.php?id=<?= $row['id'] ?>" target="_blank" class="btn btn-sm btn-info text-white">Receipt</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                    <tr class="table-info fw-bold">
+                        <td colspan="2" class="text-end">စုစုပေါင်း ရောင်းအား:</td>
+                        <td colspan="3"><?= number_format($grand_total) ?> MMK</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php endif; ?>
     </div>
 
     <script>
-        // Live Orders fetching
+        // Orders fetching
         async function fetchLiveOrders() {
             if ("<?= $tab ?>" !== 'orders') return;
             try {
@@ -306,7 +310,6 @@ $tab = $_GET['tab'] ?? 'orders';
                             <td><small>${o.time_formatted}</small></td>
                             <td>
                                 <button class='btn btn-success btn-sm' onclick='setReady(${o.id})'>Ready</button>
-                                <button class='btn btn-outline-secondary btn-sm' onclick="window.open('print_receipt.php?id=${o.id}','_blank','width=400')">Bill</button>
                             </td>
                         </tr>`;
                     });
@@ -320,7 +323,7 @@ $tab = $_GET['tab'] ?? 'orders';
             fetchLiveOrders();
         }
 
-        // Sub-category grouping data
+        // Sub-category data (not use)
         const catData = <?php
             $all = $conn->query("SELECT * FROM categories");
             $data = [];
