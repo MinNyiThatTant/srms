@@ -6,6 +6,9 @@
 ### admin_login
 ![admin_login](screenshots/admin_login.PNG)
 
+### new_orders
+![new_orders](screenshots/new_order.PNG)
+
 ### manage_category
 ![manage_category](screenshots/manage_category.PNG)
 
