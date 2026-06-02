@@ -3,6 +3,9 @@
 ### User View
 ![User View](screenshots/user_home.PNG)
 
+### order
+![order](screenshots/order.PNG)
+
 ### admin_login
 ![admin_login](screenshots/admin_login.PNG)
 
@@ -17,9 +20,6 @@
 
 ### manage_sell
 ![manage_sell](screenshots/sell.PNG)
-
-### order
-![order](screenshots/order.PNG)
 
 ### Circuit_Diagram
 ![Circuit_Diagram](screenshots/Circuit_Diagram.jpg)
