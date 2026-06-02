@@ -119,7 +119,7 @@ $res = $conn->query($menuQuery);
         .sub-cat-btn { background: transparent; border: 1px solid #4f46e5; color: #a5b4fc; padding: 4px 14px; border-radius: 20px; cursor: pointer; }
         .sub-cat-btn.active { background: #4f46e5; color: white; }
         .filter-header { font-size: 0.7rem; color: #94a3b8; margin-right: 10px; display: inline-flex; align-items: center; }
-        .order-status-card { background: #3558a3; border-radius: 10px; padding: 10px; margin-bottom: 10px; border-left: 3px solid #6366f1; }
+        .order-status-card { background: #0f172a; border-radius: 10px; padding: 10px; margin-bottom: 10px; border-left: 3px solid #6366f1; }
         .order-status-card.pending { border-left-color: #f59e0b; }
         .order-status-card.ready { border-left-color: #10b981; }
         .btn-cancel { background: #dc3545; color: white; border: none; padding: 4px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; }
@@ -146,7 +146,7 @@ $res = $conn->query($menuQuery);
             <button class="btn-close btn-close-white" style="font-size: 10px;" id="closeStatusBtn">×</button>
         </div>
         <div id="status-list" style="max-height: 400px; overflow-y: auto;">
-            <div class="text-center text-muted small py-3">Waiting...</div>
+            <div class="text-center text-muted small py-3">အော်ဒါများ စောင့်ဆိုင်းနေပါသည်...</div>
         </div>
     </div>
 
@@ -157,20 +157,20 @@ $res = $conn->query($menuQuery);
 
         <!-- Main Category Filter -->
         <div class="main-cat-tabs" id="mainCatTabs">
-            <button class="main-cat-btn active" data-main-cat="all">ALl Menus</button>
+            <button class="main-cat-btn active" data-main-cat="all">📋 အားလုံး</button>
             <?php
             $mainCats = $conn->query("SELECT * FROM main_categories ORDER BY name");
             while ($main = $mainCats->fetch_assoc()):
             ?>
                 <button class="main-cat-btn" data-main-cat="<?= htmlspecialchars($main['name']) ?>">
-                    <?= htmlspecialchars($main['name']) ?>
+                    📁 <?= htmlspecialchars($main['name']) ?>
                 </button>
             <?php endwhile; ?>
         </div>
 
         <!-- Sub Category Filter Row -->
         <div id="subCatFilterRow" class="sub-cat-row">
-            <span class="filter-header">Sub Menus</span>
+            <span class="filter-header">🔍 အောက်ခံအမျိုးအစား:</span>
             <button class="sub-cat-btn active" data-sub-cat="all">အားလုံး</button>
         </div>
 
@@ -204,8 +204,7 @@ $res = $conn->query($menuQuery);
     </div>
 
  <script>
-    
-    // Sub Categories
+    // ==================== SUB CATEGORIES DATA ====================
     const subCategoriesData = <?php 
         $subData = [];
         $subQuery = $conn->query("SELECT sc.*, mc.name as main_cat_name 
@@ -222,9 +221,9 @@ $res = $conn->query($menuQuery);
         echo json_encode($subData);
     ?>;
     
-    // Global Variables
+    // ==================== GLOBAL VARIABLES ====================
     let cartQuantities = {};
-    let myOrders = [];          
+    let myOrders = [];          // array of order IDs for current table only
     let currentMainCat = 'all';
     let currentSubCat = 'all';
     let statusInterval = null;
@@ -233,10 +232,9 @@ $res = $conn->query($menuQuery);
     const urlParams = new URLSearchParams(window.location.search);
     const currentTableNo = urlParams.get('table') || localStorage.getItem('current_table') || "1";
     localStorage.setItem('current_table', currentTableNo);
-    const tableIdSpan = document.getElementById('table-id');
-    if (tableIdSpan) tableIdSpan.innerText = currentTableNo;
+    document.getElementById('table-id').innerText = currentTableNo;
     
-    // Storage Functions for Order Tracking
+    // ==================== STORAGE (Table-specific) ====================
     function getStorageKey() {
         return `myOrders_table_${currentTableNo}`;
     }
@@ -248,6 +246,7 @@ $res = $conn->query($menuQuery);
             if (stored && stored !== 'undefined' && stored !== 'null' && stored !== '') {
                 const parsed = JSON.parse(stored);
                 if (Array.isArray(parsed)) {
+                    // Filter valid IDs
                     myOrders = parsed.filter(id => id > 0);
                 } else {
                     myOrders = [];
@@ -275,7 +274,6 @@ $res = $conn->query($menuQuery);
         const badge = document.getElementById('order-count-badge');
         if (!toggleBtn) return;
         
-        // Always show button 
         if (myOrders.length > 0) {
             toggleBtn.style.display = 'flex';
             if (badge) badge.innerText = myOrders.length;
@@ -286,7 +284,7 @@ $res = $conn->query($menuQuery);
         }
     }
     
-    // Cart Functions
+    // ==================== CART FUNCTIONS ====================
     async function loadCartFromServer() {
         try {
             const res = await fetch('api/get_cart.php');
@@ -364,17 +362,17 @@ $res = $conn->query($menuQuery);
         }
     }
 
-    // Filtering Functions
+    // ==================== FILTER FUNCTIONS ====================
     function updateSubCategoryFilterUI() {
         const subFilterRow = document.getElementById('subCatFilterRow');
         if (!subFilterRow) return;
         
-        let html = '<span class="filter-header">Sub Menus</span>';
-        html += '<button class="sub-cat-btn active" data-sub-cat="all">All</button>';
+        let html = '<span class="filter-header">🔍 အောက်ခံအမျိုးအစား:</span>';
+        html += '<button class="sub-cat-btn active" data-sub-cat="all">အားလုံး</button>';
         
         if (currentMainCat !== 'all' && subCategoriesData[currentMainCat]) {
             subCategoriesData[currentMainCat].forEach(sub => {
-                html += `<button class="sub-cat-btn" data-sub-cat="${escapeHtml(sub.name)}">${escapeHtml(sub.name)}</button>`;
+                html += `<button class="sub-cat-btn" data-sub-cat="${escapeHtml(sub.name)}">📌 ${escapeHtml(sub.name)}</button>`;
             });
         } else if (currentMainCat === 'all') {
             const allSubs = {};
@@ -382,7 +380,7 @@ $res = $conn->query($menuQuery);
                 subCategoriesData[cat].forEach(sub => {
                     if (!allSubs[sub.name]) {
                         allSubs[sub.name] = true;
-                        html += `<button class="sub-cat-btn" data-sub-cat="${escapeHtml(sub.name)}">${escapeHtml(sub.name)}</button>`;
+                        html += `<button class="sub-cat-btn" data-sub-cat="${escapeHtml(sub.name)}">📌 ${escapeHtml(sub.name)}</button>`;
                     }
                 });
             }
@@ -416,7 +414,7 @@ $res = $conn->query($menuQuery);
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 
-    // Event Listeners
+    // ==================== EVENT LISTENERS ====================
     function setupEventListeners() {
         document.querySelectorAll('.main-cat-btn').forEach(btn => {
             btn.removeEventListener('click', mainCatClickHandler);
@@ -481,7 +479,7 @@ $res = $conn->query($menuQuery);
         }
     }
 
-    // Order Placement and Tracking
+    // ==================== ORDER ====================
     async function placeOrder() {
         const itemsToSend = [];
         for (let name in cartQuantities) {
@@ -522,83 +520,93 @@ $res = $conn->query($menuQuery);
         }
     }
 
-    // Status tracking
-    async function updateStatusDisplay() {
-        updateStatusButton();
-        
-        const statusListEl = document.getElementById('status-list');
-        if (!statusListEl) return;
-        
-        if (myOrders.length === 0) {
-            statusListEl.innerHTML = '<div class="text-center text-muted small py-3">မှာယူထားသော Order မရှိပါ</div>';
-            return;
-        }
-        
-        // Fetch status for each order
-        const fetchPromises = myOrders.map(async (id) => {
-            try {
-                const res = await fetch(`api/check_status.php?id=${id}`);
-                const data = await res.json();
-                return { id, data, error: false };
-            } catch(e) {
-                return { id, data: { status: 'pending', item_details: '' }, error: true };
-            }
-        });
-        
-        const results = await Promise.all(fetchPromises);
-        let html = "";
-        
-        for (const result of results) {
-            const id = result.id;
-            const statusData = result.data;
-            const orderStatus = (statusData.status || 'pending').toLowerCase();
-            const isReady = (orderStatus === 'ready');
-            const isDelivered = (orderStatus === 'delivered');
-            
-            let itemDetails = '';
-            if (statusData.item_details && statusData.item_details !== '') {
-                const items = statusData.item_details.split('|');
-                itemDetails = items.map(item => `<div class="small text-muted">• ${item}</div>`).join('');
-            } else {
-                itemDetails = '<div class="small text-muted">Waiting...</div>';
-            }
-            
-            let statusText = '';
-            let statusClass = '';
-            let showCancel = false;
-            
-            if (isReady) {
-                statusText = 'Ready, Waiting for Delivery';
-                statusClass = 'ready';
-                showCancel = false;   
-            }else {
-                statusText = 'Ordering';
-                statusClass = 'pending';
-                showCancel = true;
-            }
-            
-            html += `
-                <div class="order-status-card ${statusClass}">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <strong class="text-info" style="font-size: 13px;">Order #${id}</strong>
-                        <span class="badge ${isReady ? 'bg-success' : 'bg-warning text-dark'}">${statusText}</span>
-                    </div>
-                    <div class="mb-2">${itemDetails}</div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        ${showCancel ? `<button class="btn-cancel" onclick="cancelOrder(${id})">Cancel</button>` : ''}
-                    </div>
-                </div>
-            `;
-        }
-        
-        statusListEl.innerHTML = html;
-        const badgeEl = document.getElementById('order-count-badge');
-        if (badgeEl) badgeEl.innerText = myOrders.length;
-        updateStatusButton();
+    // ==================== STATUS TRACKING (Fixed) ====================
+    // Replace the entire updateStatusDisplay function in menu.php with this:
+
+async function updateStatusDisplay() {
+    updateStatusButton();
+    
+    const statusListEl = document.getElementById('status-list');
+    if (!statusListEl) return;
+    
+    if (myOrders.length === 0) {
+        statusListEl.innerHTML = '<div class="text-center text-muted small py-3">မှာယူထားသောအော်ဒါမရှိပါ</div>';
+        return;
     }
+    
+    const fetchPromises = myOrders.map(async (id) => {
+        try {
+            const res = await fetch(`api/check_status.php?id=${id}`);
+            const data = await res.json();
+            return { id, data, error: false };
+        } catch(e) {
+            return { id, data: { status: 'pending', item_details: '' }, error: true };
+        }
+    });
+    
+    const results = await Promise.all(fetchPromises);
+    let html = "";
+    
+    for (const result of results) {
+        const id = result.id;
+        const statusData = result.data;
+        const orderStatus = (statusData.status || 'pending').toLowerCase();
+        const isReady = (orderStatus === 'ready');
+        const isPending = (orderStatus === 'pending');
+        
+        let itemDetails = '';
+        if (statusData.item_details) {
+            const items = statusData.item_details.split('|');
+            itemDetails = items.map(item => `<div class="small text-muted">• ${item}</div>`).join('');
+        } else {
+            itemDetails = '<div class="small text-muted">ပစ္စည်းများ စောင့်ဆိုင်းနေပါသည်...</div>';
+        }
+        
+        let statusText = '';
+        let statusClass = '';
+        let showCancel = false;
+        
+        if (isReady) {
+            statusText = '✅ အသင့်ဖြစ်ပါပြီ';
+            statusClass = 'ready';
+            showCancel = false;
+        } else {
+            statusText = '👨‍🍳 ချက်ပြုတ်နေပါသည်';
+            statusClass = 'pending';
+            showCancel = true;   // For pending or unknown status, show cancel button
+        }
+        
+        html += `
+            <div class="order-status-card ${statusClass}">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <strong class="text-info" style="font-size: 13px;">📌 Order #${id}</strong>
+                    <span class="badge ${isReady ? 'bg-success' : 'bg-warning text-dark'}">${statusText}</span>
+                </div>
+                <div class="mb-2">${itemDetails}</div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">စားပွဲအမှတ်: ${currentTableNo}</small>
+                    ${showCancel ? `<button class="btn-cancel" onclick="cancelOrder(${id})">ပယ်ဖျက်မည်</button>` : ''}
+                </div>
+            </div>
+        `;
+        
+        if (isReady) {
+            setTimeout((orderId) => {
+                myOrders = myOrders.filter(oid => oid != orderId);
+                saveOrdersToStorage();
+                updateStatusDisplay();
+            }, 60000, id);
+        }
+    }
+    
+    statusListEl.innerHTML = html;
+    const badgeEl = document.getElementById('order-count-badge');
+    if (badgeEl) badgeEl.innerText = myOrders.length;
+    updateStatusButton();
+}
 
     window.cancelOrder = async function(id) {
-        if (!confirm('Order ကို ပယ်ဖျက်မှာ သေချာပါသလား?')) return;
+        if (!confirm('ဒီအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?')) return;
         try {
             const res = await fetch('api/cancel_order.php', {
                 method: 'POST',
@@ -612,14 +620,14 @@ $res = $conn->query($menuQuery);
                 saveOrdersToStorage();
                 updateStatusDisplay();
             } else {
-                alert(data.message || 'Order ပယ်ဖျက်၍မရပါ (Order is already ready or completed)');
+                alert(data.message || 'Order ပယ်ဖျက်၍မရပါ');
             }
         } catch(e) {
             alert('Error cancelling order');
         }
     };
 
-    // Initial
+    // ==================== INITIALIZATION ====================
     function startLiveTracking() {
         if (statusInterval) clearInterval(statusInterval);
         updateStatusDisplay();

@@ -18,7 +18,7 @@ $_SESSION['current_table'] = $tableNo;
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
-    <title>Smart ကေတုအလင်္ကာ - Welcome</title>
+    <title>ကေတုအလင်္ကာ Smart Restraunt </title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -212,7 +212,7 @@ $_SESSION['current_table'] = $tableNo;
         </div>
 
         <h2>
-            <strong>Smart ကေတုအလင်္ကာ Restaurant</strong><br>
+            <strong>ကေတုအလင်္ကာ Smart Restaurant</strong><br>
         </h2>
 
         <h3>

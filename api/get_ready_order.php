@@ -1,6 +1,6 @@
 <?php
 include '../config/db.php';
-// search for the next ready order, if found, return it and mark as delivered (so that next time it won't be returned again)
+// search for the next ready order
 $res = $conn->query("SELECT * FROM orders WHERE status = 'ready' ORDER BY id ASC LIMIT 1");
 if($row = $res->fetch_assoc()) {
     echo json_encode($row);

@@ -1,24 +1,44 @@
 <?php
 include '../config/db.php';
+header('Content-Type: application/json');
 
-if(!isset($_GET['id'])) exit;
+if(!isset($_GET['id'])) {
+    echo json_encode(['status' => 'pending', 'item_details' => '']);
+    exit;
+}
+
 $id = (int)$_GET['id'];
 
-// fetch order status and item details
-$res = $conn->query("SELECT o.status, 
-                     (SELECT GROUP_CONCAT(CONCAT(item_name, ' (x', qty, ')') SEPARATOR '|') 
-                      FROM (SELECT order_id, item_name, COUNT(*) as qty 
-                            FROM order_details 
-                            GROUP BY order_id, item_name) as d 
-                      WHERE d.order_id = o.id) as item_details
-                     FROM orders o 
-                     WHERE o.id = $id");
+// First get the order status
+$orderRes = $conn->query("SELECT status, table_no FROM orders WHERE id = $id");
 
-$data = $res->fetch_assoc();
-header('Content-Type: application/json');
-if($data) {
-    echo json_encode($data);
-} else {
-    echo json_encode(['status' => 'not found']);
+if (!$orderRes || $orderRes->num_rows == 0) {
+    // Order not found in database
+    echo json_encode(['status' => 'pending', 'item_details' => '']);
+    exit;
 }
+
+$order = $orderRes->fetch_assoc();
+$status = strtolower(trim($order['status']));
+
+// Get item details
+$detailsRes = $conn->query("SELECT item_name, COUNT(*) as qty 
+                            FROM order_details 
+                            WHERE order_id = $id 
+                            GROUP BY item_name");
+
+$items = [];
+if ($detailsRes && $detailsRes->num_rows > 0) {
+    while ($row = $detailsRes->fetch_assoc()) {
+        $items[] = $row['item_name'] . ' (x' . $row['qty'] . ')';
+    }
+}
+$item_details = implode('|', $items);
+
+// Return the actual status from database
+echo json_encode([
+    'status' => $status,
+    'table_no' => $order['table_no'],
+    'item_details' => $item_details ?: ''
+]);
 ?>

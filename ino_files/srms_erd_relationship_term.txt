@@ -1,0 +1,23 @@
+1. main_categories -> sub_categories
+One main category -> many sub categories
+
+2. sub_categories → menu
+One sub category -> many menu items
+
+3. main_categories → menu
+One main category -> many menu items
+
+4. orders → order_details
+One order -> many ordered items
+
+System Flow
+main_categories -> sub_categories -> menu -> orders -> order_details
+
+Tables
+admin
+orders
+orders_details
+categories
+main_categories
+sub_categories
+menu
