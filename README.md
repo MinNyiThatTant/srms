@@ -12,11 +12,11 @@
 ### manage_category
 ![manage_category](screenshots/manage_category.PNG)
 
-### manage_sell
-![manage_sell](screenshots/sell.PNG)
-
 ### manage_menu
 ![manage_menu](screenshots/manage_menu.PNG)
+
+### manage_sell
+![manage_sell](screenshots/sell.PNG)
 
 ### order
 ![order](screenshots/order.PNG)
