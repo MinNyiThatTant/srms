@@ -191,4 +191,5 @@ DFPlayer Mini နှင့် Speaker ကို အသုံးပြု၍
 
 ## License
 
-This project is developed for educational and research purposes.
+This project is developed for educational and research purposes only.
+All Rights Reserved.
