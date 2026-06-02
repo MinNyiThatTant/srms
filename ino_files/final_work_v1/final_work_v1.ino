@@ -1,8 +1,3 @@
-// =====================================================
-// SMART LINE FOLLOWER - Transition Based Marker Detection
-// More reliable than timing
-// =====================================================
-
 #include <Keypad.h>
 
 #define ENA   21
@@ -55,7 +50,7 @@ bool inCurve = false;
 unsigned long lastUltrasonicCheck = 0;
 bool usePivotTurn = true;
 
-// ----- TRANSITION DETECTION VARIABLES -----
+// transition based marker detection variables
 int lastLeft = 1;
 int lastRight = 1;
 bool bothWhiteStarted = false;
@@ -130,9 +125,7 @@ void resetState() {
   markerPassed = false;
 }
 
-// =====================================================
-// LINE FOLLOWING - TRANSITION BASED MARKER
-// =====================================================
+// line follow
 void followLineToTarget() {
   int rawLeft = digitalRead(IR_LEFT);    // Black=1, White=0
   int rawRight = digitalRead(IR_RIGHT);
@@ -145,7 +138,7 @@ void followLineToTarget() {
     Serial.print(" M="); Serial.println(currentMarker);
   }
   
-  // ----- MARKER DETECTION (transition based) -----
+  // marker detection (transition based)
   
   // Detect both white starting
   if (rawLeft == 0 && rawRight == 0 && !bothWhiteStarted) {
@@ -173,7 +166,7 @@ void followLineToTarget() {
     markerPassed = false;
   }
   
-  // ----- LINE FOLLOW LOGIC -----
+  // line following logic
   
   if (rawLeft == 1 && rawRight == 1) {
     // Both black - straight
@@ -205,9 +198,7 @@ void followLineToTarget() {
   lastRight = rawRight;
 }
 
-// =====================================================
-// RETURNING HOME
-// =====================================================
+// return home logic
 void followLineReturn() {
   int rawLeft = digitalRead(IR_LEFT);
   int rawRight = digitalRead(IR_RIGHT);
@@ -272,9 +263,7 @@ void followLineReturn() {
   lastRight = rawRight;
 }
 
-// =====================================================
-// PIVOT TURNS
-// =====================================================
+// pivot turns
 void pivotLeft() {
   digitalWrite(IN1, LOW);   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);  digitalWrite(IN4, LOW);
@@ -319,9 +308,7 @@ void handleLostLine() {
   }
 }
 
-// =====================================================
-// OBSTACLE
-// =====================================================
+// obstacle detection
 void checkObstacle() {
   if (millis() - lastUltrasonicCheck < 100) return;
   lastUltrasonicCheck = millis();
@@ -342,18 +329,14 @@ long getDistance() {
   return (d == 0) ? -1 : d * 0.034 / 2;
 }
 
-// =====================================================
-// AUDIO
-// =====================================================
+// audio
 void playAudio(int file) {
   Serial.print("Play: "); Serial.println(file);
   uint8_t cmd[] = {0x7E, 0xFF, 0x06, 0x03, 0x00, 0x00, (uint8_t)file, 0xEF};
   Serial2.write(cmd, 8);
 }
 
-// =====================================================
-// MOTOR CONTROL
-// =====================================================
+// motor control
 void setForwardDirection() {
   digitalWrite(IN1, LOW);  digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);  digitalWrite(IN4, HIGH);

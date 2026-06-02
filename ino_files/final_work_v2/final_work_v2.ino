@@ -93,9 +93,7 @@ void loop() {
   delay(5);
 }
 
-// =====================================================
-// KEYPAD
-// =====================================================
+// keypad
 void handleKeypad(char key) {
   Serial.print("Key: "); Serial.println(key);
   
@@ -125,9 +123,7 @@ void resetState() {
   lastMarkerTime = 0;
 }
 
-// =====================================================
-// LINE FOLLOWING TO TABLE
-// =====================================================
+// line follow
 void followLineToTarget() {
   int rawLeft = digitalRead(IR_LEFT);    // Black=1, White=0
   int rawRight = digitalRead(IR_RIGHT);
@@ -140,7 +136,7 @@ void followLineToTarget() {
     Serial.print(" M="); Serial.println(currentMarker);
   }
   
-  // ----- MARKER DETECTION -----
+  // marker detection
   if (millis() - lastMarkerTime > MARKER_COOLDOWN) {
     if (!onMarker && rawLeft == 0 && rawRight == 0) {
       onMarker = true;
@@ -163,7 +159,7 @@ void followLineToTarget() {
     }
   }
   
-  // ----- LINE FOLLOW LOGIC -----
+  // line following logic
   if (rawLeft == 1 && rawRight == 1) {
     lastDirection = 0;
     inCurve = false;
@@ -189,9 +185,7 @@ void followLineToTarget() {
   }
 }
 
-// =====================================================
-// RETURNING HOME
-// =====================================================
+// return home
 void followLineReturn() {
   int rawLeft = digitalRead(IR_LEFT);
   int rawRight = digitalRead(IR_RIGHT);
@@ -251,9 +245,7 @@ void followLineReturn() {
   }
 }
 
-// =====================================================
-// PIVOT TURNS
-// =====================================================
+// pivot turns
 void pivotLeft() {
   digitalWrite(IN1, LOW);   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);  digitalWrite(IN4, LOW);
@@ -298,9 +290,7 @@ void handleLostLine() {
   }
 }
 
-// =====================================================
-// OBSTACLE
-// =====================================================
+// obstacle detection
 void checkObstacle() {
   if (millis() - lastUltrasonicCheck < 100) return;
   lastUltrasonicCheck = millis();
@@ -321,18 +311,14 @@ long getDistance() {
   return (d == 0) ? -1 : d * 0.034 / 2;
 }
 
-// =====================================================
-// AUDIO
-// =====================================================
+// audio
 void playAudio(int file) {
   Serial.print("Play: "); Serial.println(file);
   uint8_t cmd[] = {0x7E, 0xFF, 0x06, 0x03, 0x00, 0x00, (uint8_t)file, 0xEF};
   Serial2.write(cmd, 8);
 }
 
-// =====================================================
-// MOTOR CONTROL
-// =====================================================
+// motor control
 void setForwardDirection() {
   digitalWrite(IN1, LOW);  digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);  digitalWrite(IN4, HIGH);
