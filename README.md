@@ -196,3 +196,7 @@ DFPlayer Mini နှင့် Speaker ကို အသုံးပြု၍
 
 This project is developed for educational and research purposes only.
 All Rights Reserved.
+
+The source code, documentation, design, and related materials များကို လေ့လာရန်အတွက် ကြည့်ရှုခွင့်ရှိသည်။
+မည်သည့်အပိုင်းကိုမျှ မိတ္တူကူးခြင်း၊ ပြင်ဆင်ခြင်း၊ ပြန်လည်ဖြန့်ချိခြင်း၊ ထုတ်ဝေခြင်း သို့မဟုတ် စီးပွားဖြစ်အသုံးပြုခြင်း မပြုရ။
+ခွင့်ပြုချက်မရှိဘဲ အသုံးပြုပါက တားမြစ်သည်။
